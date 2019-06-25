@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "arduino-wifi-f0e68",
+  "private_key_id": "6e338fb3d206d7364968f48f38f1faeb573d9740",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCvUgBUCNY17+SD\nFznKWD6oL1WBVZbOrh4C3iU3XM2XJr0DnDzafnvsNLcUgiIyh2tneKmhztgF75cT\nfSpf74kX+7TkgZ+IkHvQxiykPWM5g8aC9wCWtGHqBm8ePdP6EJEeUGYE2Vlgpow5\nB9EEeMdCXtl2L/YpDV90BitEP1gkkSKDir0uZYioejtb4byGLKXDMgGZpEAYGEKr\nJ/piY0Q6qaBX2NWrZ9MPNpRFE5csq89eqC3Z6lqFIjzsiqPwtSbkDoYL9NExFcNw\nNyXxds3ksA6gtKBxA0fBjaQtwfKL9K1/kDTbaQj9LN7u+s9pxRpoAcl34CstfMkp\ni4hT7H51AgMBAAECggEAM/TbQAw2X1muoOLbL4ojV3hfoKqavLmBD1yCLvwDuY2z\nakR9DEt7si6VKzC9rbfQLqPlsZw5DNlKLm5jhnbYbBEeNLHtc21OJDr2s921cDAL\nPniw5fijI9WwTIgKMAuE1jUBZuJ6yFfTKnuUh/y7III3c/0WuGfMJ/hEDj+vgXY6\ncT06k/a/J3SZny4ajLB06YvzodCzj8TC75sT9YyvSrNgXoDqaEhzoReTWGkkK2mn\nfEHDEv/7kg4uuNLbiy+QtSIdMPRJKyHXfoQsSl8B/nw9x87dMf6S/L8/zea13LqD\nBTbdf6KcYpqgPHr69Y1xUhXHeqJLNGVG8eQfjzeh6QKBgQD3NBvovJy8jg3JUiUh\n4DwmkYDlETgGISD9HpA1hNLXzbTJZDni8vaxzE+X9TbNE14DQm0TvmgBlWwnpahO\n2Anmc3bLzy8Iou1eoBiUJgCMWPb7k123ZK+lbGyaUU6mC4e77HZLSmx/BXNK3N9b\nl1JJhryn117YEBFLfINDPRhRpwKBgQC1jxMlTpLmHqUOeOHHIvXhQprR9VG28KlB\n9YoKS1pRYu4acIhlkDPQOyLSPRYebFHYXqV0XEQtupGqyb/6Ynewd+/TFSGZo4zg\nf4JdaBZEiAd4mOrCwmk85qt1FgSVB9CsgpmnDH2G+QeZMlutY6uxfT0Yw5HGztru\nYkGI+spagwKBgB28+w6IgiJ8xFPPuf/VRect4d+srpyuJ5XLs3V8wRCNAo6nq/8N\nU3gYKAsTyL/q8Ihb2VtisIhgPV6XoyO5AZfjlAr4paPYVc3oXIyV9cLsgOnK1J9X\nUXoJDReTaG65PF7zF1f/YAX31eLPp18RWSjXOKLIWfSMGkiGdhQEqYRJAoGADNfe\nJtl0EstAKdHrRsb2VcT8ZrXP3f0QPBY+eZPzA6bX6Q7k1ypoP+avA+hGVEidUY0A\nb0bHm+SCwW4cIn4ssVMKqAfqpI+pO4hJlIn0aUymGqXWlYhjIWe/4Tx5foFbBZkH\nfYWoq4+aNgAV9CIE1z1gwQu0mDexzQMuV55GCjkCgYAcDew4t/EWho3/aTCZt11f\nqWyIBEEME3IypEhC5Kiv27IoeGruErpo2gVu6ESdnzau4/2cRbS7qZNiFxD3n0T6\nP3ScB7f80d17bPVizrZGallNnYnK7Wn9pgl0JOMoLaQYFpE8wYyThrBSFOYutfGH\n9BuH+Gxgwjdgc3p5y0uuSQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "arduino-wifi-f0e68@appspot.gserviceaccount.com",
+  "client_id": "115275758286140870682",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/arduino-wifi-f0e68%40appspot.gserviceaccount.com"
+}
