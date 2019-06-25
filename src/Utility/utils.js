@@ -12,3 +12,7 @@ exports.findAllMonth = function (recordList) {
     }
     return [];
 }
+
+exports.insertionSort = function (list) {
+
+}
