@@ -1,5 +1,6 @@
 import React from 'react';
-import lock from "../static/icons-lock-24.png"
+import lock from "../static/icons-lock-24.png";
+import unlock from "../static/icons-unlock-24.png";
 import { Card, Image } from 'react-bootstrap';
 
 class TTTGameTitle extends React.Component {
@@ -21,18 +22,20 @@ class TTTGameTitle extends React.Component {
 
     render() {
         return (
-            <Card bg={this.getTypeClass().bg}
+            <Card
+                bg={this.getTypeClass().bg}
                 text={this.getTypeClass().text}
                 style={{ width: '18rem' }}>
                 <Card.Header>
                     <div className="d-flex justify-content-start">
                         <Image
-                            src={lock}
+                            src={(this.props.type === "public") ? unlock : lock}
                             height="24px"
                             width="24px"
                             className="mr-2" />
-                        <Card.Text>{this.props.name}</Card.Text>
+                        <Card.Text as="h6" className="">{this.props.id}</Card.Text>
                     </div>
+                    <Card.Text as="h4">{this.props.name}</Card.Text>
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>{this.props.description}</Card.Text>

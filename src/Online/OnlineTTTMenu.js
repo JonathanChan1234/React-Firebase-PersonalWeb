@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-
 import { Button, ListGroup } from 'react-bootstrap';
+
 import db from '../firebase/firestore';
 import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
@@ -62,6 +62,8 @@ class OnlineTTTMenu extends React.Component {
             return (
                 <ListGroup.Item>
                     <TTTGameTitle
+                        key={game.id}
+                        id={game.id}
                         type={(game.password) ? "private" : "public"}
                         name={game.name}
                         created_at={game.created_at} />
@@ -74,7 +76,7 @@ class OnlineTTTMenu extends React.Component {
         axios.get("http://localhost:5001/arduino-wifi-f0e68/us-central1/test/hello")
             .then((response) => {
                 console.log(response)
-            })
+            });
     }
 
     render() {
@@ -89,7 +91,8 @@ class OnlineTTTMenu extends React.Component {
                     className="mb-5"
                     onClick={() => this.setState({ showNewGameModal: true })}>
                     Start A New Game</Button>
-                <Button variant="warning"
+                <Button 
+                    variant="warning"
                     className="mb-5"
                     onClick={() => { this.testCloudFunction() }}>
                     Delete All Entries
