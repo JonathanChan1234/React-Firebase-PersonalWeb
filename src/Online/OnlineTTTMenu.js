@@ -5,13 +5,16 @@ import { Button, ListGroup } from 'react-bootstrap';
 import db from '../firebase/firestore';
 import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
+import TTTGamePasswordModal from './TTTGamePasswordModal';
 
 class OnlineTTTMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             games: [],
-            showNewGameModal: false
+            showNewGameModal: false,
+            showPasswordModal: false,
+            currentGameId: ""
         };
     }
 
@@ -66,7 +69,8 @@ class OnlineTTTMenu extends React.Component {
                         id={game.id}
                         type={(game.password) ? "private" : "public"}
                         name={game.name}
-                        created_at={game.created_at} />
+                        created_at={game.created_at}
+                        handleOnClick={} />
                 </ListGroup.Item>
             );
         });
@@ -97,6 +101,9 @@ class OnlineTTTMenu extends React.Component {
                     onClick={() => { this.testCloudFunction() }}>
                     Delete All Entries
                 </Button>
+                <TTTGamePasswordModal
+                    show={this.state.showPasswordModal}
+                    onHide={() => {this.setState({showPasswordModal: false})}}/>
                 <TTTNewGameModal
                     startNewGame={this.startNewGame.bind(this)}
                     show={this.state.showNewGameModal}
