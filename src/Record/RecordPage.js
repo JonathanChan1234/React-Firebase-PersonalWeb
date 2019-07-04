@@ -1,6 +1,4 @@
 import React from 'react';
-import firebase from "firebase/firebase";
-
 import db from '../firebase/firestore';
 import Record from '../Object/Record';
 import RecordForm from './RecordForm';
@@ -160,7 +158,7 @@ class RecordPage extends React.Component {
                 <RecordForm />
 
                 <RecordFilter
-                    recordList = {this.state.recordList}
+                    recordList={this.state.recordList}
                     sortOrder={this.state.sortOrder}
                     dateFilter={this.state.dateFilter}
                     onFilterChange={this.handleFilterChange}

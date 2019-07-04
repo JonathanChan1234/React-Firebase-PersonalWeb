@@ -24,13 +24,11 @@ class RecordForm extends React.Component {
                 category: this.state.currentCategory,
                 type: this.state.currentType,
                 date: firebase.firestore.Timestamp.fromDate(new Date())
-            })
-                .then(ref => {
-                    alert(`Add item ref no ${ref.id}`)
-                })
-                .catch(err => {
-                    alert(err)
-                });
+            }).then(ref => {
+                alert(`Add item ref no ${ref.id}`)
+            }).catch(err => {
+                alert(err)
+            });
         } else {
             alert("Please fill in all the field");
         }

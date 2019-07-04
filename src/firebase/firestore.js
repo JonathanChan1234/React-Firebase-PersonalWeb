@@ -1,8 +1,7 @@
 import firebase from "firebase/firebase";
-import 'firebase/firestore'
 
 const firebaseConfig = {
-    apiKey: "",
+    apiKey: "AIzaSyA5vIcGV2u9LhvV5b1EMw1VtRDh1vid85g",
     authDomain: "arduino-wifi-f0e68.firebaseapp.com",
     databaseURL: "https://arduino-wifi-f0e68.firebaseio.com",
     projectId: "arduino-wifi-f0e68",

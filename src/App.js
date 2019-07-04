@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import TTTGame from './TTT/TTTGame';
 import TTTAdvancedGame from './TTT_Advanced/TTTAdvancedGame';
 import Game from './Example/Game';
-import RecordPage from './Record/RecordPage'
+import RecordPage from './Record/RecordPage';
+import OnlineTTTMenu from './Online/OnlineTTTMenu';
 
 class App extends React.Component {
     render() {
@@ -24,15 +25,17 @@ class App extends React.Component {
                                     <li className="nav-item"><Link to="/simple" className="nav-link">Simple</Link></li>
                                     <li className="nav-item"><Link to="/advanced" className="nav-link">Advanced</Link></li>
                                     <li className="nav-item"><Link to="/record" className="nav-link">Record</Link></li>
+                                    <li className="nav-item"><Link to="/online" className="nav-link">Play Online</Link></li>
                                 </ul>
                             </div>
                     </nav>
                         <hr></hr>
-
                         <Route path='/' exact component={Game} />
                         <Route path='/simple' component={TTTGame} />
                         <Route path='/advanced' component={TTTAdvancedGame} />
                         <Route path='/record' component={RecordPage} />
+                        <Route path='/online' component={OnlineTTTMenu}/>
+                        <Route path='./game' component={TTTGame}/>
                 </div>
             </Router>
                 )

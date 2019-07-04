@@ -13,6 +13,16 @@ exports.findAllMonth = function (recordList) {
     return [];
 }
 
-exports.insertionSort = function (list) {
-
+exports.insertionSort = function (arr) {
+    for (let i = 0; i < arr.length; ++i) {
+        let unsorted = arr[i];
+        let j = i - 1;
+        while (unsorted < arr[j] && j >= 0) {
+            // swap the elements
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = unsorted;
+    }
+    return arr
 }
