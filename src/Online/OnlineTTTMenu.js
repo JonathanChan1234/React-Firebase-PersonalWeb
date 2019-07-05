@@ -16,6 +16,7 @@ class OnlineTTTMenu extends React.Component {
             showPasswordModal: false,
             currentGameId: ""
         };
+        this.onItemClick = this.onItemClick.bind(this);
     }
 
     componentDidMount() {
@@ -70,9 +71,17 @@ class OnlineTTTMenu extends React.Component {
                         type={(game.password) ? "private" : "public"}
                         name={game.name}
                         created_at={game.created_at}
-                        handleOnClick={} />
+                        handleOnClick={this.onItemClick} />
                 </ListGroup.Item>
             );
+        });
+    }
+
+    onItemClick(gameId) {
+        console.log(gameId)
+        this.setState({
+            showPasswordModal: true,
+            currentGameId: gameId
         });
     }
 
@@ -95,15 +104,16 @@ class OnlineTTTMenu extends React.Component {
                     className="mb-5"
                     onClick={() => this.setState({ showNewGameModal: true })}>
                     Start A New Game</Button>
-                <Button 
+                <Button
                     variant="warning"
                     className="mb-5"
                     onClick={() => { this.testCloudFunction() }}>
                     Delete All Entries
                 </Button>
                 <TTTGamePasswordModal
+                    gameId={this.state.currentGameId}
                     show={this.state.showPasswordModal}
-                    onHide={() => {this.setState({showPasswordModal: false})}}/>
+                    onHide={() => { this.setState({ showPasswordModal: false }) }} />
                 <TTTNewGameModal
                     startNewGame={this.startNewGame.bind(this)}
                     show={this.state.showNewGameModal}

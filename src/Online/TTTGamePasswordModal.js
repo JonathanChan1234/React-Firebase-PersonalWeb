@@ -5,15 +5,15 @@ class TTTGamePasswordModal extends React.Component {
     render() {
         return (
             <Modal
-                show={this.props.showPasswordModal}
+                show={this.props.show}
                 onHide={this.props.onHide}
                 dialogClassName="modal-90W"
                 aria-labelledby="newGameModalLabel">
                 <Modal.Header>
-                    Please Enter the password
+                    {`Please Enter the password for game room ${this.props.gameId}`} 
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Password</p>
+                    <p>Your password</p>
                 </Modal.Body>
             </Modal>
         );

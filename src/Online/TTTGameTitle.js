@@ -23,9 +23,11 @@ class TTTGameTitle extends React.Component {
     render() {
         return (
             <Card
+                onClick={() => this.props.handleOnClick(this.props.id)}
+                key={this.props.id}
                 bg={this.getTypeClass().bg}
                 text={this.getTypeClass().text}
-                style={{ width: '18rem' }}>
+                style={{ width: '18rem', cursor: 'pointer' }}>
                 <Card.Header>
                     <div className="d-flex justify-content-start">
                         <Image
