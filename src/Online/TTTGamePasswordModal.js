@@ -1,7 +1,11 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, FormGroup, FormControl, Button } from 'react-bootstrap';
 
 class TTTGamePasswordModal extends React.Component {
+    submitForm(e) {
+        e.preventDefault()
+    }
+
     render() {
         return (
             <Modal
@@ -9,11 +13,28 @@ class TTTGamePasswordModal extends React.Component {
                 onHide={this.props.onHide}
                 dialogClassName="modal-90W"
                 aria-labelledby="newGameModalLabel">
-                <Modal.Header>
-                    {`Please Enter the password for game room ${this.props.gameId}`} 
+                <Modal.Header closeButton>
+                    <div>
+                        <h3>Are you sure that you want to enter this game room</h3>
+                        <h5>{this.props.gameId}</h5>
+                    </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Your password</p>
+                    <FormGroup
+                        onSubmit={(e) => this.submitForm(e)}
+                        controlId="passwordForm">
+                        {(this.state.type === "private") ? 
+                            <FormControl
+                            type="password"
+                            placeholder="Password"
+                            aria-label="Password"
+                            aria-describedby="basic-addon1" /> : null}
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="mt-2">
+                            Enter</Button>
+                    </FormGroup>
                 </Modal.Body>
             </Modal>
         );

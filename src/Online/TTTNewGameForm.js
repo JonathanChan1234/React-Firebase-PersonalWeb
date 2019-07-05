@@ -102,7 +102,11 @@ class TTTNewGameForm extends React.Component {
                                 type="radio"
                                 id="privateRadio"
                                 required />
-                            <label className="form-check-label custom-control-label" htmlFor="privateRadio">Private</label>
+                            <label
+                                className="form-check-label custom-control-label"
+                                htmlFor="privateRadio"
+                                style={{ fontSize: '12px' }}>
+                                Private</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input
@@ -113,7 +117,11 @@ class TTTNewGameForm extends React.Component {
                                 type="radio"
                                 id="publicRadio"
                                 required />
-                            <label className="form-check-label custom-control-label" htmlFor="publicRadio">Public (No password is requried)</label>
+                            <label
+                                className="form-check-label custom-control-label"
+                                htmlFor="publicRadio"
+                                style={{ fontSize: '12px' }}>
+                                Public (No password is requried)</label>
                         </div>
                     </div>
                     <button type="submit" className="btn btn-primary btn-block">OK</button>
