@@ -3,4 +3,4 @@ import config from './config';
 
 firebase.initializeApp(config);
 
-export default firebase.firestore();
+export default firebase.auth();

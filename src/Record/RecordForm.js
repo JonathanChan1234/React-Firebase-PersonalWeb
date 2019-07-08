@@ -1,6 +1,6 @@
 import React from 'react';
-import firebase from "firebase/firebase";
-import db from '../firebase/firestore';
+import Firebase from  'firebase/firebase'
+import firestore from '../firebase/firestore';
 
 class RecordForm extends React.Component {
     constructor(props) {
@@ -18,12 +18,12 @@ class RecordForm extends React.Component {
         if (this.state.currentAmount !== 0 &&
             this.state.currentItem !== "" &&
             this.state.currentType !== "") {
-            db.collection("records").add({
+            firestore.collection("records").add({
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
                 category: this.state.currentCategory,
                 type: this.state.currentType,
-                date: firebase.firestore.Timestamp.fromDate(new Date())
+                date: Firebase.firestore.Timestamp.fromDate(new Date())
             }).then(ref => {
                 alert(`Add item ref no ${ref.id}`)
             }).catch(err => {

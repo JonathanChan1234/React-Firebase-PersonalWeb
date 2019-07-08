@@ -1,5 +1,5 @@
 import React from 'react';
-import db from '../firebase/firestore';
+import firestore from '../firebase/firestore';
 import Record from '../Object/Record';
 import RecordForm from './RecordForm';
 import RecordEntry from './RecordEntry';
@@ -15,11 +15,6 @@ class RecordPage extends React.Component {
             sortOrder: "",
             dateFilter: ""
         };
-        this.handleFilterChange = this.handleFilterChange.bind(this);
-        this.handleDateFilterChange = this.handleDateFilterChange.bind(this);
-        this.deleteItem = this.deleteItem.bind(this);
-        this.handleRecordDelete = this.handleRecordDelete.bind(this);
-        this.resetDeleteItem = this.resetDeleteItem.bind(this);
     }
 
     componentDidMount() {
@@ -36,7 +31,7 @@ class RecordPage extends React.Component {
         }
         switch (this.state.sortOrder) {
             case "Sort By Date":
-                this.unsubscribe = db.collection('records')
+                this.unsubscribe = firestore.collection('records')
                     .orderBy('date', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -45,7 +40,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             case "Sort By Amount":
-                this.unsubscribe = db.collection('records')
+                this.unsubscribe = firestore.collection('records')
                     .orderBy('amount', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -54,7 +49,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             case "Sort By Category":
-                this.unsubscribe = db.collection('records')
+                this.unsubscribe = firestore.collection('records')
                     .orderBy('category', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -63,7 +58,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             default:
-                this.unsubscribe = db.collection('records')
+                this.unsubscribe = firestore.collection('records')
                     .orderBy('date', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -107,7 +102,7 @@ class RecordPage extends React.Component {
         console.log("delete item " + this.state.deleteItemId);
         if (this.state.deleteItemId !== "") {
             console.log("delete item haha");
-            db.collection("records").doc(this.state.deleteItemId).delete()
+            firestore.collection("records").doc(this.state.deleteItemId).delete()
                 .then(function () {
                     console.log("Delete Successfully")
                 })
@@ -129,7 +124,7 @@ class RecordPage extends React.Component {
             table.push(<RecordEntry
                 key={record.id}
                 record={record}
-                handleRecordDelete={this.handleRecordDelete} />)
+                handleRecordDelete={this.handleRecordDelete.bind(this)} />)
         });
         return table;
     }
@@ -152,8 +147,8 @@ class RecordPage extends React.Component {
             <div>
                 <RecordDialog
                     dialog="delete"
-                    deleteItem={this.deleteItem}
-                    resetDeleteItem={this.resetDeleteItem} />
+                    deleteItem={this.deleteItem.bind(this)}
+                    resetDeleteItem={this.resetDeleteItem.bind(this)} />
                 <h1>Record List</h1>
                 <RecordForm />
 
@@ -161,8 +156,8 @@ class RecordPage extends React.Component {
                     recordList={this.state.recordList}
                     sortOrder={this.state.sortOrder}
                     dateFilter={this.state.dateFilter}
-                    onFilterChange={this.handleFilterChange}
-                    onDateFilterChange={this.handleDateFilterChange} />
+                    onFilterChange={this.handleFilterChange.bind(this)}
+                    onDateFilterChange={this.handleDateFilterChange.bind(this)} />
 
                 <table className="table table-striped">
                     <thead className="thead-dark">

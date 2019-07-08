@@ -10,37 +10,34 @@ class TTTGameTitle extends React.Component {
     }
 
     getTypeClass() {
-        switch (this.props.type) {
-            case "private":
-                return { bg: "dark", text: "white" };
-            case "public":
-                return { bg: "light", text: "" };
-            default:
-                return { bg: "dark", text: "white" };
+        if(this.props.game.password) {
+            return { bg: "dark", text: "white" };
+        } else {
+            return { bg: "", text: "black" };
         }
     }
 
     render() {
         return (
             <Card
-                onClick={() => this.props.handleOnClick(this.props.id)}
-                key={this.props.id}
+                onClick={() => this.props.handleOnClick(this.props.game)}
+                key={this.props.game.id}
                 bg={this.getTypeClass().bg}
                 text={this.getTypeClass().text}
                 style={{ width: '18rem', cursor: 'pointer' }}>
                 <Card.Header>
                     <div className="d-flex justify-content-start">
                         <Image
-                            src={(this.props.type === "public") ? unlock : lock}
+                            src={(this.props.game.password) ? lock : unlock}
                             height="24px"
                             width="24px"
                             className="mr-2" />
-                        <Card.Text as="h6" className="">{this.props.id}</Card.Text>
+                        <Card.Text as="h6" className="">{this.props.game.id}</Card.Text>
                     </div>
-                    <Card.Text as="h4">{this.props.name}</Card.Text>
+                    <Card.Text as="h4">{this.props.game.name}</Card.Text>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text>{this.props.description}</Card.Text>
+                    <Card.Text>{this.props.game.description}</Card.Text>
                 </Card.Body>
             </Card>
         );

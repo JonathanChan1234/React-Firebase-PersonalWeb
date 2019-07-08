@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import TTTGame from './TTT/TTTGame';
 import TTTAdvancedGame from './TTT_Advanced/TTTAdvancedGame';
-import Game from './Example/Game';
+import LoginPage from './Login/LoginPage';
 import RecordPage from './Record/RecordPage';
 import OnlineTTTMenu from './Online/OnlineTTTMenu';
 
@@ -30,7 +30,7 @@ class App extends React.Component {
                             </div>
                     </nav>
                         <hr></hr>
-                        <Route path='/' exact component={Game} />
+                        <Route path='/' exact component={LoginPage} />
                         <Route path='/simple' component={TTTGame} />
                         <Route path='/advanced' component={TTTAdvancedGame} />
                         <Route path='/record' component={RecordPage} />

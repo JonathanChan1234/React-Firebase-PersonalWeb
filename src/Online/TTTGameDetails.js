@@ -1,11 +1,6 @@
 import React from 'react';
 
 class TTTGameDetails extends React.Component {
-    isActiveTab() {
-        if (this.props.active === 'active') return "show active";
-        return "";
-    }
-
     render() {
         return (
             <div className={"tab-pane fade " + this.isActiveTab()}

@@ -21,8 +21,7 @@ class RecordEntry extends React.Component {
                         onClick={(e) => this.props.handleRecordDelete(e)}
                         data-toggle="modal" 
                         data-target="#exampleModal">
-                        Remove
-                        </button>
+                        Remove</button>
                 </td>
             </tr>
         );

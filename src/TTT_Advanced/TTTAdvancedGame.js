@@ -1,6 +1,5 @@
 import React from 'react';
 import TTTAdvancedBoard from './TTTAdvancedBoard';
-import db from '../firebase/firestore';
 
 const checkWinner = (currentState) => {
     const lines = [
@@ -55,19 +54,6 @@ class TTTAdvancedGame extends React.Component {
             alertText: '',
             users: []
         };
-    }
-
-    componentDidMount() {        
-        db.collection('users').onSnapshot((snapspot) => {
-            var users = []
-            snapspot.forEach(user => {
-                users.push(user.data());
-            })
-            this.setState({
-                users: users
-            })
-            console.log(users)
-        }); 
     }
 
     handleClick(index) {

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Button, ListGroup } from 'react-bootstrap';
 
-import db from '../firebase/firestore';
+import firestore from '../firebase/firestore';
 import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
 import TTTGamePasswordModal from './TTTGamePasswordModal';
@@ -14,13 +14,13 @@ class OnlineTTTMenu extends React.Component {
             games: [],
             showNewGameModal: false,
             showPasswordModal: false,
-            currentGameId: ""
+            currentGame: {}
         };
         this.onItemClick = this.onItemClick.bind(this);
     }
 
     componentDidMount() {
-        this.unsubscribe = db.collection("TTTGames")
+        this.unsubscribe = firestore.collection("TTTGames")
             .orderBy('name', 'desc')
             .onSnapshot((snapshot) => {
                 var games = [];
@@ -44,7 +44,7 @@ class OnlineTTTMenu extends React.Component {
 
     startNewGame(e, game) {
         e.preventDefault();
-        db.collection("TTTGames").add({
+        firestore.collection("TTTGames").add({
             game_state: [],
             name: game.name,
             next_player: game.next_player,
@@ -67,29 +67,31 @@ class OnlineTTTMenu extends React.Component {
                 <ListGroup.Item>
                     <TTTGameTitle
                         key={game.id}
-                        id={game.id}
-                        type={(game.password) ? "private" : "public"}
-                        name={game.name}
-                        created_at={game.created_at}
+                        game={game}
                         handleOnClick={this.onItemClick} />
                 </ListGroup.Item>
             );
         });
     }
 
-    onItemClick(gameId) {
-        console.log(gameId)
-        this.setState({
-            showPasswordModal: true,
-            currentGameId: gameId
-        });
+    onItemClick(game) {
+        this.setState({ currentGame: game, showPasswordModal: true });
     }
 
-    testCloudFunction() {
-        axios.get("http://localhost:5001/arduino-wifi-f0e68/us-central1/test/hello")
+    enterGameRoom() {
+        this.setState({ showPasswordModal: false })
+    }
+
+    deleteAllGameEntry() {
+        axios.post("http://localhost:5001/arduino-wifi-f0e68/us-central1/app/games/deleteAllGame")
             .then((response) => {
                 console.log(response)
-            });
+                if(response.data.success === 1) {
+                    alert("All entry deleted");
+                } else {
+                    alert("Something is wrong");
+                }
+            }).catch(err => console.log(err));
     }
 
     render() {
@@ -107,13 +109,13 @@ class OnlineTTTMenu extends React.Component {
                 <Button
                     variant="warning"
                     className="mb-5"
-                    onClick={() => { this.testCloudFunction() }}>
-                    Delete All Entries
-                </Button>
+                    onClick={() => { this.deleteAllGameEntry() }}>
+                    Delete All Entries</Button>
                 <TTTGamePasswordModal
-                    gameId={this.state.currentGameId}
+                    game={this.state.currentGame}
                     show={this.state.showPasswordModal}
-                    onHide={() => { this.setState({ showPasswordModal: false }) }} />
+                    onHide={() => { this.setState({ showPasswordModal: false }) }}
+                    enterGameRoom={this.enterGameRoom.bind(this)} />
                 <TTTNewGameModal
                     startNewGame={this.startNewGame.bind(this)}
                     show={this.state.showNewGameModal}
