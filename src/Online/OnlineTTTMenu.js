@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Button, ListGroup } from 'react-bootstrap';
 
-import firestore from '../firebase/firestore';
+import App from '../firebase/index';
 import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
 import TTTGamePasswordModal from './TTTGamePasswordModal';
@@ -17,10 +17,11 @@ class OnlineTTTMenu extends React.Component {
             currentGame: {}
         };
         this.onItemClick = this.onItemClick.bind(this);
+        this.app = new App();
     }
 
     componentDidMount() {
-        this.unsubscribe = firestore.collection("TTTGames")
+        this.unsubscribe = this.app.firestore.collection("TTTGames")
             .orderBy('name', 'desc')
             .onSnapshot((snapshot) => {
                 var games = [];
@@ -44,7 +45,7 @@ class OnlineTTTMenu extends React.Component {
 
     startNewGame(e, game) {
         e.preventDefault();
-        firestore.collection("TTTGames").add({
+        this.app.firestore.collection("TTTGames").add({
             game_state: [],
             name: game.name,
             next_player: game.next_player,

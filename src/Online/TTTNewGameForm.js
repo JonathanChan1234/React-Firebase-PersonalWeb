@@ -1,5 +1,5 @@
 import React from 'react';
-import firebase from 'firebase/firebase';
+import Firebase from 'firebase/firebase';
 
 class TTTNewGameForm extends React.Component {
     constructor(props) {
@@ -47,8 +47,8 @@ class TTTNewGameForm extends React.Component {
                         name: this.state.name,
                         next_player: "O",
                         password: this.state.password,
-                        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
-                        updated_at: firebase.firestore.Timestamp.fromDate(new Date())
+                        created_at: Firebase.firestore.Timestamp.fromDate(new Date()),
+                        updated_at: Firebase.firestore.Timestamp.fromDate(new Date())
                     })}
                     noValidate>
                     <div className="form-group">

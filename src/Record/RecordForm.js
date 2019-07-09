@@ -1,6 +1,6 @@
 import React from 'react';
 import Firebase from  'firebase/firebase'
-import firestore from '../firebase/firestore';
+import App from '../firebase/index';
 
 class RecordForm extends React.Component {
     constructor(props) {
@@ -11,6 +11,7 @@ class RecordForm extends React.Component {
             currentCategory: "food",
             currentType: "",
         };
+        this.app = new App();
     }
 
     submitRecord(e) {
@@ -18,7 +19,7 @@ class RecordForm extends React.Component {
         if (this.state.currentAmount !== 0 &&
             this.state.currentItem !== "" &&
             this.state.currentType !== "") {
-            firestore.collection("records").add({
+            this.app.firestore.collection("records").add({
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
                 category: this.state.currentCategory,

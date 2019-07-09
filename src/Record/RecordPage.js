@@ -1,5 +1,5 @@
 import React from 'react';
-import firestore from '../firebase/firestore';
+import App from '../firebase/index';
 import Record from '../Object/Record';
 import RecordForm from './RecordForm';
 import RecordEntry from './RecordEntry';
@@ -15,6 +15,7 @@ class RecordPage extends React.Component {
             sortOrder: "",
             dateFilter: ""
         };
+        this.app = new App();
     }
 
     componentDidMount() {
@@ -31,7 +32,7 @@ class RecordPage extends React.Component {
         }
         switch (this.state.sortOrder) {
             case "Sort By Date":
-                this.unsubscribe = firestore.collection('records')
+                this.unsubscribe = this.app.firestore.collection('records')
                     .orderBy('date', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -40,7 +41,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             case "Sort By Amount":
-                this.unsubscribe = firestore.collection('records')
+                this.unsubscribe = this.app.firestore.collection('records')
                     .orderBy('amount', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -49,7 +50,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             case "Sort By Category":
-                this.unsubscribe = firestore.collection('records')
+                this.unsubscribe = this.app.firestore.collection('records')
                     .orderBy('category', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -58,7 +59,7 @@ class RecordPage extends React.Component {
                     });
                 break;
             default:
-                this.unsubscribe = firestore.collection('records')
+                this.unsubscribe = this.app.firestore.collection('records')
                     .orderBy('date', 'desc')
                     // .limit(2)
                     .onSnapshot((snapshot) => {
@@ -102,7 +103,7 @@ class RecordPage extends React.Component {
         console.log("delete item " + this.state.deleteItemId);
         if (this.state.deleteItemId !== "") {
             console.log("delete item haha");
-            firestore.collection("records").doc(this.state.deleteItemId).delete()
+            this.app.firestore.collection("records").doc(this.state.deleteItemId).delete()
                 .then(function () {
                     console.log("Delete Successfully")
                 })
