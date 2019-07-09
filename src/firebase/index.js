@@ -1,4 +1,5 @@
-import firebase from 'firebase/firebase';
+import * as firebase from "firebase/firebase";
+
 import config from './config';
 
 // Singleton firebase class
@@ -9,7 +10,6 @@ class Firebase {
             firebase.initializeApp(config);
             instance = this;
         }
-
         this.firestore = firebase.firestore();
         this.auth = firebase.auth();
         return instance;
