@@ -20,6 +20,7 @@ class RecordPage extends React.Component {
 
     componentDidMount() {
         this.updateOrder();
+        console.log(this.app.auth.currentUser);
     }
 
     componentWillUnmount() {
