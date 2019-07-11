@@ -75,7 +75,7 @@ class App extends React.Component {
                                     <li className="nav-item"><Link to="/advanced" className="nav-link">Advanced</Link></li>
                                     <li className="nav-item"><Link to="/record" className="nav-link">Record</Link></li>
                                     <li className="nav-item"><Link to="/online" className="nav-link">Play Online</Link></li>
-                                    <li className="nav-item" style={{ cursor: 'pointer' }} onClick={() => { this.signout() }}>Sign Out</li>
+                                    <li className="nav-item" style={{ cursor: 'pointer' }} onClick={() => { this.signout() }}><a className='nav-link'>Sign Out</a></li>
                                 </ul>
                             </div>
                         </nav>
