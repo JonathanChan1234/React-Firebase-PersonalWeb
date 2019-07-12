@@ -4,11 +4,6 @@ import unlock from "../static/icons-unlock-24.png";
 import { Card, Image } from 'react-bootstrap';
 
 class TTTGameTitle extends React.Component {
-    isActiveTab() {
-        if (this.props.active === 'active') return "active";
-        return "";
-    }
-
     getTypeClass() {
         if(this.props.game.password) {
             return { bg: "dark", text: "white" };

@@ -7,6 +7,7 @@ import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
 import TTTGamePasswordModal from './TTTGamePasswordModal';
 
+const app = new App();
 class OnlineTTTMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -17,11 +18,10 @@ class OnlineTTTMenu extends React.Component {
             currentGame: {}
         };
         this.onItemClick = this.onItemClick.bind(this);
-        this.app = new App();
     }
 
     componentDidMount() {
-        this.unsubscribe = this.app.firestore.collection("TTTGames")
+        this.unsubscribe = app.firestore.collection("TTTGames")
             .orderBy('name', 'desc')
             .onSnapshot((snapshot) => {
                 var games = [];
@@ -45,8 +45,9 @@ class OnlineTTTMenu extends React.Component {
 
     startNewGame(e, game) {
         e.preventDefault();
-        this.app.firestore.collection("TTTGames").add({
+        app.firestore.collection("TTTGames").add({
             game_state: [],
+            owner: app.auth.currentUser.uid,
             name: game.name,
             next_player: game.next_player,
             password: game.password,
@@ -87,7 +88,7 @@ class OnlineTTTMenu extends React.Component {
         axios.post("http://localhost:5001/arduino-wifi-f0e68/us-central1/app/games/deleteAllGame")
             .then((response) => {
                 console.log(response)
-                if(response.data.success === 1) {
+                if (response.data.success === 1) {
                     alert("All entry deleted");
                 } else {
                     alert("Something is wrong");

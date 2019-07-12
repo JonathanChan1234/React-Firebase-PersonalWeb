@@ -6,6 +6,7 @@ import RecordEntry from './RecordEntry';
 import RecordFilter from './RecordFilter';
 import RecordDialog from './RecordDialog';
 
+const app = new App();
 class RecordPage extends React.Component {
     constructor(props) {
         super(props);
@@ -15,12 +16,11 @@ class RecordPage extends React.Component {
             sortOrder: "",
             dateFilter: ""
         };
-        this.app = new App();
     }
 
     componentDidMount() {
         this.updateOrder();
-        console.log(this.app.auth.currentUser);
+        console.log(app.auth.currentUser.uid);
     }
 
     componentWillUnmount() {
@@ -33,36 +33,36 @@ class RecordPage extends React.Component {
         }
         switch (this.state.sortOrder) {
             case "Sort By Date":
-                this.unsubscribe = this.app.firestore.collection('records')
+                this.unsubscribe = app.firestore.collection('records')
+                    .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('date', 'desc')
-                    // .limit(2)
                     .onSnapshot((snapshot) => {
                         console.log("sort by date 1")
                         this.updateRecord(snapshot);
                     });
                 break;
             case "Sort By Amount":
-                this.unsubscribe = this.app.firestore.collection('records')
+                this.unsubscribe = app.firestore.collection('records')
+                    .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('amount', 'desc')
-                    // .limit(2)
                     .onSnapshot((snapshot) => {
                         console.log("sort by amount")
                         this.updateRecord(snapshot);
                     });
                 break;
             case "Sort By Category":
-                this.unsubscribe = this.app.firestore.collection('records')
+                this.unsubscribe = app.firestore.collection('records')
+                    .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('category', 'desc')
-                    // .limit(2)
                     .onSnapshot((snapshot) => {
                         console.log("sort by category")
                         this.updateRecord(snapshot);
                     });
                 break;
             default:
-                this.unsubscribe = this.app.firestore.collection('records')
+                this.unsubscribe = app.firestore.collection('records')
+                    .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('date', 'desc')
-                    // .limit(2)
                     .onSnapshot((snapshot) => {
                         console.log("sort default")
                         this.updateRecord(snapshot);
@@ -72,7 +72,6 @@ class RecordPage extends React.Component {
     }
 
     updateRecord(snapshot) {
-        console.log("update record")
         if (snapshot.empty) {
             console.log("No record found");
         } else {
@@ -104,7 +103,7 @@ class RecordPage extends React.Component {
         console.log("delete item " + this.state.deleteItemId);
         if (this.state.deleteItemId !== "") {
             console.log("delete item haha");
-            this.app.firestore.collection("records").doc(this.state.deleteItemId).delete()
+            app.firestore.collection("records").doc(this.state.deleteItemId).delete()
                 .then(function () {
                     console.log("Delete Successfully")
                 })

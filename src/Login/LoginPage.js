@@ -48,7 +48,6 @@ class LoginPage extends React.Component {
                             className="mt-2 mr-1 column">
                             Sign Up</Button>
                     </div>
-
                 </FormGroup>
                 <Button
                     variant="secondary"

@@ -20,6 +20,7 @@ class RecordForm extends React.Component {
             this.state.currentItem !== "" &&
             this.state.currentType !== "") {
             this.app.firestore.collection("records").add({
+                uid: this.app.auth.currentUser.uid,
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
                 category: this.state.currentCategory,

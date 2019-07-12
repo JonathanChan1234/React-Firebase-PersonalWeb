@@ -12,28 +12,12 @@ class TTTNewGameForm extends React.Component {
         };
     }
 
-    handleNameChange(e) {
-        this.setState({
-            name: e.target.value
-        });
-    }
-
-    handlePasswordChange(e) {
-        this.setState({
-            password: e.target.value
-        });
-    }
-
     handleTypeChange(e) {
         this.setState({ type: e.target.value });
         if (e.target.value === "private") {
-            this.setState({
-                passwordDisabled: false
-            });
+            this.setState({ passwordDisabled: false });
         } else {
-            this.setState({
-                passwordDisabled: true
-            });
+            this.setState({ passwordDisabled: true });
         }
     }
 
@@ -54,7 +38,7 @@ class TTTNewGameForm extends React.Component {
                     <div className="form-group">
                         <label htmlFor="nameInput">Name</label>
                         <input
-                            onChange={(e) => this.handleNameChange(e)}
+                            onChange={(e) => this.setState({ name: e.target.value })}
                             value={this.state.name}
                             id="nameInput"
                             type="text"
@@ -74,7 +58,7 @@ class TTTNewGameForm extends React.Component {
                     <div className="form-group">
                         <label htmlFor="passwordInput">Password</label>
                         <input
-                            onChange={(e) => this.handlePasswordChange(e)}
+                            onChange={(e) => this.setState({ password: e.target.value })}
                             value={this.state.password}
                             id="passwordInput"
                             type="password"

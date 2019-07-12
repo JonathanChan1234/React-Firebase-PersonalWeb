@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Firebase from 'firebase/firebase';
+import FirebaseApp from './firebase/index';
 
 import TTTGame from './TTT/TTTGame';
 import TTTAdvancedGame from './TTT_Advanced/TTTAdvancedGame';
 import LoginPage from './Login/LoginPage';
 import RecordPage from './Record/RecordPage';
 import OnlineTTTMenu from './Online/OnlineTTTMenu';
-import FirebaseApp from './firebase/index';
+import SettingPage from './Setting/index';
 import SignupPage from './Login/SignupPage';
 
 const app = new FirebaseApp();
@@ -37,8 +38,14 @@ class App extends React.Component {
                     var uid = user.uid;
 
                     var currentUser = app.auth.currentUser;
+                    console.log("current user");
                     console.log(currentUser)
-                    var token = currentUser.getToken();
+                    var token = currentUser.getIdToken()
+                        .then(res => {
+                            console.log(res)
+                        }).catch(err => {
+                            console.log(err)
+                        });
                     var providerData = user.providerData;
                     console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData, token)
                 }
@@ -111,6 +118,7 @@ class App extends React.Component {
                                     <li className="nav-item"><Link to="/advanced" className="nav-link">Advanced</Link></li>
                                     <li className="nav-item"><Link to="/record" className="nav-link">Record</Link></li>
                                     <li className="nav-item"><Link to="/online" className="nav-link">Play Online</Link></li>
+                                    <li className="nav-item"><Link to="/setting" className="nav-link">Setting</Link></li>
                                     <li className="nav-item" style={{ cursor: 'pointer' }} onClick={() => { this.signout() }}><a href='/' className='nav-link'>Sign Out</a></li>
                                 </ul>
                             </div>
@@ -120,7 +128,8 @@ class App extends React.Component {
                         <Route path='/advanced' component={TTTAdvancedGame} />
                         <Route path='/record' component={RecordPage} />
                         <Route path='/online' component={OnlineTTTMenu} />
-                        <Route path='./game' component={TTTGame} />
+                        <Route path='/game' component={TTTGame} />
+                        <Route path='/setting' component={SettingPage} />
                     </div>
                 </Router>
             );
@@ -138,7 +147,7 @@ class App extends React.Component {
                         render={() =>
                             <LoginPage
                                 signInWithGoogle={this.signInWithGoogle}
-                                signInwithOwnEmail={this.signInwithOwnEmail}
+                                signInWithOwnEmail={this.signInwithOwnEmail}
                                 signUpWithOwnEmail={this.signUpWithOwnEmail} />
                         } />
                     <Route path='/signup' exact render={() => <SignupPage signUp={this.signUpWithOwnEmail} />} />
