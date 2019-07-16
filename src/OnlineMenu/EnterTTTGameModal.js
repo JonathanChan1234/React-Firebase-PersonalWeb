@@ -26,7 +26,7 @@ class TTTGamePasswordModal extends React.Component {
                                 aria-label="Password"
                                 aria-describedby="basic-addon1" /> : null}
                         <Button
-                            onClick={() => {this.props.enterGameRoom()}}
+                            onClick={() => {this.props.enterGameRoom(this.props.game)}}
                             type="submit"
                             variant="primary"
                             className="mt-2 float-right">

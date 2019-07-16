@@ -13,6 +13,20 @@ exports.findAllMonth = function (recordList) {
     return [];
 }
 
+exports.isArrayEmpty = function(arr) {
+    for(let i = 0; i < arr.length; ++i) {
+        if(arr[i] !== "") return 0;
+    }
+    return 1;
+}
+
+exports.isArrayFull = function(arr) {
+    for(let i = 0; i < arr.length; ++i) {
+        if(arr[i] === "") return 0;
+    }
+    return 1;
+}
+
 exports.insertionSort = function (arr) {
     for (let i = 0; i < arr.length; ++i) {
         let unsorted = arr[i];

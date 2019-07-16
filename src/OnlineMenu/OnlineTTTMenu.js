@@ -50,7 +50,7 @@ class OnlineTTTMenu extends React.Component {
     startNewGame(e, game) {
         e.preventDefault();
         app.firestore.collection("TTTGames").add({
-            game_state: [],
+            game_state: Array(9).fill(""),
             owner: app.auth.currentUser.uid,
             name: game.name,
             description: game.description,
@@ -71,9 +71,13 @@ class OnlineTTTMenu extends React.Component {
     /**
      * Enter game room after clicking the game card
      */
-    enterGameRoom() {
+    enterGameRoom(game) {
+        // Dismiss the modal
         this.setState({ showPasswordModal: false });
-        this.props.history.push(`/online/${this.state.currentGame.id}`)
+        // Store the current game id into local storage
+        localStorage.setItem("currentGame", game.id);
+        // redirect to the game room
+        this.props.history.push(`/online/${game.id}`)
     }
 
     /**

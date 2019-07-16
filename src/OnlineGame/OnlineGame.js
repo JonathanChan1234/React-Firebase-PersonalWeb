@@ -2,6 +2,7 @@ import React from 'react';
 import Firebase from 'firebase/firebase';
 import App from '../firebase/index';
 import OnlineGameBoard from './OnlineGameBoard';
+import { Card } from 'react-bootstrap';
 
 const app = new App();
 const checkWinner = (currentState) => {
@@ -83,7 +84,6 @@ class OnlineGame extends React.Component {
     }
 
     handleClick(index) {
-
         const currentState = this.state.currentState;
         var next_player;
 
@@ -117,7 +117,7 @@ class OnlineGame extends React.Component {
                 game_state: currentState,
                 next_player: next_player
             })
-            .then(res => {
+            .then(() => {
                 console.log("update successfully")
             })
             .catch(err => {
@@ -136,16 +136,24 @@ class OnlineGame extends React.Component {
         }
 
         return (
-            <div id='container'>
-                <div className='game-board'>
-                    <OnlineGameBoard
-                        owner={this.state.owner}
-                        squares={currentState}
-                        winnerState={winnerState}
-                        onClick={i => this.handleClick(i)} />
+            <div id='container' className="d-flex flex-row justify-content-between">
+                <div>
+                    <div className='game-board'>
+                        <OnlineGameBoard
+                            owner={this.state.owner}
+                            squares={currentState}
+                            winnerState={winnerState}
+                            onClick={i => this.handleClick(i)} />
+                    </div>
+                    <div id="winnerText">{status}</div>
+                    <button className="btn-primary" onClick={() => resetGameState(this.gameId)}>Reset Game State</button>
                 </div>
-                <div id="winnerText">{status}</div>
-                <button className="btn-primary" onClick={() => resetGameState(this.gameId)}>Reset Game State</button>
+
+                <Card>
+                    <Card.Header>Your Opponent</Card.Header>
+                    <Card.Text>
+                    {(this.state.opponent) ?  this.state.opponent: "No Opponent right now"}</Card.Text>
+                </Card>
             </div>
         );
     }
