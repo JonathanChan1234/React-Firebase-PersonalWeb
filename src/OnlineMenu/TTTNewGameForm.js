@@ -7,6 +7,7 @@ class TTTNewGameForm extends React.Component {
         this.state = {
             name: "",
             password: "",
+            description: "",
             passwordDisabled: false,
             type: ""
         };
@@ -30,6 +31,7 @@ class TTTNewGameForm extends React.Component {
                         game_state: [],
                         name: this.state.name,
                         next_player: "O",
+                        description: this.state.description,
                         password: this.state.password,
                         created_at: Firebase.firestore.Timestamp.fromDate(new Date()),
                         updated_at: Firebase.firestore.Timestamp.fromDate(new Date())
@@ -70,10 +72,23 @@ class TTTNewGameForm extends React.Component {
                             required />
                         <div className="valid-feedback">
                             Looks good!
-                            </div>
+                        </div>
                         <div className="invalid-tooltip">
                             You must fill in the password for the game
-                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="descriptionInput">Description</label>
+                        <input
+                            onChange={(e) => this.setState({ description: e.target.value })}
+                            value={this.state.description}
+                            id="descriptionInput"
+                            type="text"
+                            name="description"
+                            className="form-control"
+                            aria-describedby="descriptionHelp"
+                            placeholder="Enter the description"/>
                     </div>
 
                     <div className="form-group">

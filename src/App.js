@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import Firebase from 'firebase/firebase';
 import FirebaseApp from './firebase/index';
 
@@ -7,7 +8,8 @@ import TTTGame from './TTT/TTTGame';
 import TTTAdvancedGame from './TTT_Advanced/TTTAdvancedGame';
 import LoginPage from './Login/LoginPage';
 import RecordPage from './Record/RecordPage';
-import OnlineTTTMenu from './Online/OnlineTTTMenu';
+import OnlineTTTGame from './OnlineGame/OnlineGame';
+import OnlineTTTMenu from './OnlineMenu/OnlineTTTMenu';
 import SettingPage from './Setting/index';
 import SignupPage from './Login/SignupPage';
 
@@ -18,36 +20,46 @@ const handleAccountError = (error) => {
     console.log(`Error Code: ${error.code}, Message: ${error.message}`);
 }
 
+function NoMatch({ location }) {
+    return (
+        <div>
+            <h3>
+                No match for <code>{location.pathname}</code>
+            </h3>
+        </div>
+    );
+}
+
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isSignedIn: false };
+        this.state = {
+            isSignedIn: false,
+            displayName: "",
+            email: "",
+            photoURL: "",
+            uid: "",
+            token: ""
+        };
     }
 
     componentDidMount() {
         this.unregisterAuthObserver = app.auth.onAuthStateChanged(
             (user) => {
-                console.log(user)
                 this.setState({ isSignedIn: !!user })
                 if (user != null) {
-                    var displayName = user.displayName;
-                    var email = user.email;
-                    var emailVerified = user.emailVerified;
-                    var photoURL = user.photoURL;
-                    var isAnonymous = user.isAnonymous;
-                    var uid = user.uid;
-
-                    var currentUser = app.auth.currentUser;
-                    console.log("current user");
-                    console.log(currentUser)
-                    var token = currentUser.getIdToken()
-                        .then(res => {
-                            console.log(res)
-                        }).catch(err => {
-                            console.log(err)
-                        });
-                    var providerData = user.providerData;
-                    console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData, token)
+                    this.setState({
+                        displayName: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        uid: user.uid
+                    });
+                    user.getIdToken().then(token => {
+                        console.log("Token: " + token);
+                        this.setState({ token: token });
+                    }).catch(err => {
+                        console.log(err)
+                    });
                 }
             });
     }
@@ -98,39 +110,41 @@ class App extends React.Component {
         if (this.state.isSignedIn) {
             return (
                 <Router>
-                    <div>
-                        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                            <a className="navbar-brand" href="/">
-                                <img src="/logo.png" width="30" height="30" alt="" />Website
-                            </a>
-                            <button
-                                className="navbar-toggler"
-                                type="button" data-toggle="collapse"
-                                data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent"
-                                aria-expanded="false"
-                                aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"></span>
-                            </button>
-                            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul className="navbar-nav mr-auto">
-                                    <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>
-                                    <li className="nav-item"><Link to="/advanced" className="nav-link">Advanced</Link></li>
-                                    <li className="nav-item"><Link to="/record" className="nav-link">Record</Link></li>
-                                    <li className="nav-item"><Link to="/online" className="nav-link">Play Online</Link></li>
-                                    <li className="nav-item"><Link to="/setting" className="nav-link">Setting</Link></li>
-                                    <li className="nav-item" style={{ cursor: 'pointer' }} onClick={() => { this.signout() }}><a href='/' className='nav-link'>Sign Out</a></li>
-                                </ul>
-                            </div>
-                        </nav>
-                        <hr></hr>
+                    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                        <Navbar.Brand href="/" className="d-flex align-items-center">
+                            <img src="/logo.png" width="50" height="50" alt="" />
+                            <div className="ml-1">TT Chan</div>
+                        </Navbar.Brand>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                        <Navbar.Collapse id="responsive-navbar-nav">
+                            <Nav className="mr-auto">
+                                <Link to="/" className="nav-text nav-link">Simple</Link>
+                                <Link to="/advanced" className="nav-text nav-link">Advanced</Link>
+                                <Link to="/record" className="nav-text nav-link">Record</Link>
+                                <Link to="/menu" className="nav-text nav-link">Online</Link>
+                            </Nav>
+                            <Nav>
+                                <NavDropdown
+                                    title={(this.state.displayName) ? this.state.displayName : this.state.email}
+                                    id="collasible-nav-dropdown"
+                                    className="nav-text">
+                                    <NavDropdown.Item href="settting">Setting</NavDropdown.Item>
+                                    <NavDropdown.Item href="/" onClick={() => { this.signout() }}>Sign out</NavDropdown.Item>
+                                </NavDropdown>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
+                    <hr></hr>
+                    <Switch>
                         <Route path='/' exact component={TTTGame} />
                         <Route path='/advanced' component={TTTAdvancedGame} />
                         <Route path='/record' component={RecordPage} />
-                        <Route path='/online' component={OnlineTTTMenu} />
+                        <Route path='/menu' component={OnlineTTTMenu} />
                         <Route path='/game' component={TTTGame} />
                         <Route path='/setting' component={SettingPage} />
-                    </div>
+                        <Route path='/online/:id' component={OnlineTTTGame} />
+                        <Route component={NoMatch} />
+                    </Switch>
                 </Router>
             );
         }

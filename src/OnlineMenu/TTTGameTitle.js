@@ -5,8 +5,8 @@ import { Card, Image } from 'react-bootstrap';
 
 class TTTGameTitle extends React.Component {
     getTypeClass() {
-        if(this.props.game.password) {
-            return { bg: "dark", text: "white" };
+        if (this.props.game.password) {
+            return { bg: "info", text: "white" };
         } else {
             return { bg: "", text: "black" };
         }
@@ -19,20 +19,20 @@ class TTTGameTitle extends React.Component {
                 key={this.props.game.id}
                 bg={this.getTypeClass().bg}
                 text={this.getTypeClass().text}
-                style={{ width: '18rem', cursor: 'pointer' }}>
+                style={{ width: '22rem', cursor: 'pointer' }}>
                 <Card.Header>
-                    <div className="d-flex justify-content-start">
+                    <div>
                         <Image
                             src={(this.props.game.password) ? lock : unlock}
                             height="24px"
                             width="24px"
-                            className="mr-2" />
-                        <Card.Text as="h6" className="">{this.props.game.id}</Card.Text>
+                            className="mr-2 float-right" />
+                        <Card.Text as="h4">{this.props.game.name}</Card.Text>
+                        <Card.Text as="h6" className="float-right">{this.props.game.id}</Card.Text>
                     </div>
-                    <Card.Text as="h4">{this.props.game.name}</Card.Text>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text>{this.props.game.description}</Card.Text>
+                    <Card.Text style={{"fontSize": "12px"}}>{this.props.game.description}</Card.Text>
                 </Card.Body>
             </Card>
         );

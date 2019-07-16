@@ -10,9 +10,10 @@ class TTTGamePasswordModal extends React.Component {
                 dialogClassName="modal-90W"
                 aria-labelledby="newGameModalLabel">
                 <Modal.Header closeButton>
-                    <div>
-                        <h3>Are you sure that you want to enter this game room</h3>
-                        <h5>{this.props.game.id}</h5>
+                    <div className="w-100">
+                        <p style={{"fontSize": "16px"}}>{`Entering Game Room`}</p>
+                        <div style={{"fontSize": "12px"}}>{this.props.game.name}</div>
+                        <div className="float-right" style={{"fontSize": "12px"}}>{this.props.game.id}</div>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
@@ -28,7 +29,7 @@ class TTTGamePasswordModal extends React.Component {
                             onClick={() => {this.props.enterGameRoom()}}
                             type="submit"
                             variant="primary"
-                            className="mt-2">
+                            className="mt-2 float-right">
                             Enter</Button>
                     </FormGroup>
                 </Modal.Body>
