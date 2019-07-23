@@ -1,16 +1,18 @@
 import React from 'react';
 import App from '../firebase/index';
 import Record from '../Object/Record';
-import RecordForm from './RecordForm';
+import RecordModal from './RecordModal';
 import RecordEntry from './RecordEntry';
 import RecordFilter from './RecordFilter';
 import RecordDialog from './RecordDialog';
+import { Button } from 'react-bootstrap';
 
 const app = new App();
 class RecordPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            showRecordModal: false,
             recordList: [],
             deleteItemId: "",
             sortOrder: "",
@@ -100,7 +102,6 @@ class RecordPage extends React.Component {
     }
 
     deleteItem() {
-        console.log("delete item " + this.state.deleteItemId);
         if (this.state.deleteItemId !== "") {
             console.log("delete item haha");
             app.firestore.collection("records").doc(this.state.deleteItemId).delete()
@@ -151,15 +152,18 @@ class RecordPage extends React.Component {
                     deleteItem={this.deleteItem.bind(this)}
                     resetDeleteItem={this.resetDeleteItem.bind(this)} />
                 <h1>Record List</h1>
-                <RecordForm />
-
+                <Button
+                    onClick={() => { this.setState({ showRecordModal: true }) }}
+                    className="mt-1">Click to add a record</Button>
+                <RecordModal
+                    show={this.state.showRecordModal}
+                    onHide={() => this.setState({ showRecordModal: false })} />
                 <RecordFilter
                     recordList={this.state.recordList}
                     sortOrder={this.state.sortOrder}
                     dateFilter={this.state.dateFilter}
                     onFilterChange={this.handleFilterChange.bind(this)}
                     onDateFilterChange={this.handleDateFilterChange.bind(this)} />
-
                 <table className="table table-striped">
                     <thead className="thead-dark">
                         <tr>

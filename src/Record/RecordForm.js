@@ -1,25 +1,29 @@
 import React from 'react';
-import Firebase from  'firebase/firebase'
+import Firebase from 'firebase/firebase'
 import App from '../firebase/index';
+import { Form, FormGroup, FormControl, Button } from 'react-bootstrap';
 
+const app = new App();
 class RecordForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            errMsg: Array(4).fill(""),
             currentItem: "",
             currentAmount: 0,
             currentCategory: "food",
             currentType: "",
+            incomeChecked: true,
+            outcomeChecked: false
         };
-        this.app = new App();
     }
 
-    submitRecord(e) {
+    handleFormSubmit(e) {
         e.preventDefault();
         if (this.state.currentAmount !== 0 &&
             this.state.currentItem !== "" &&
             this.state.currentType !== "") {
-            this.app.firestore.collection("records").add({
+            app.firestore.collection("records").add({
                 uid: this.app.auth.currentUser.uid,
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
@@ -36,120 +40,87 @@ class RecordForm extends React.Component {
         }
     }
 
-    handleItemChange(e) {
-        this.setState({
-            currentItem: e.target.value
-        });
-    }
-
-    handleAmountChange(e) {
-        this.setState({
-            currentAmount: e.target.value
-        });
-    }
-
-    handleCategoryChange(e) {
-        this.setState({
-            currentCategory: e.target.value
-        });
-    }
-
-    handleTypeChange(e) {
-        this.setState({
-            currentType: e.target.value
-        });
-    }
-
     render() {
+        const [itemErrMsg, amountErrMsg, categoryErrMsg, typeErrMsg] = this.state.errMsg;
         return (
             <div>
-                <form
-                    onSubmit={(e) => this.submitRecord(e)}
-                    className="needs-validation"
-                    noValidate>
-                    <div className="form-row">
-                        <div className="form-group col-md-3">
-                            <label htmlFor="itemInput">Item</label>
-                            <input
-                                onChange={(e) => this.handleItemChange(e)}
-                                value={this.state.currentItem}
-                                id="itemInput"
-                                type="text"
-                                name="item"
-                                className="form-control-lg"
-                                aria-describedby="itemHelp"
-                                placeholder="Enter Item"
-                                required />
-                            <div className="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div className="invalid-tooltip">
-                                You must fill in the item name
-                            </div>
-                        </div>
-
-                        <div className="form-group col-md-3">
-                            <label htmlFor="amountInput">Amount</label>
-                            <input
-                                onChange={(e) => this.handleAmountChange(e)}
-                                value={this.state.currentAmount}
-                                id="amountInput"
-                                type="number"
-                                name="amount"
-                                className="form-control-lg"
-                                aria-describedby="amountHelp"
-                                placeholder="Enter Amount"
-                                required />
-                            <div className="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="categorySelect">Category</label>
-                        <select
-                            onChange={(e) => this.handleCategoryChange(e)}
+                <Form
+                    noValidate
+                    className="d-flex flex-column align-item-center text-center"
+                    validated={this.state.validated}
+                    onSubmit={(e) => { this.handleFormSubmit(e) }}>
+                    <FormGroup>
+                        <FormControl
+                            name="item"
+                            onChange={(e) => this.setState({ currentItem: e.target.value })}
+                            value={this.state.currentItem}
+                            style={{ "width": "20rem" }}
+                            className="mt-2 row"
+                            type="text"
+                            placeholder="Item"
+                            aria-label="Item"
+                            maxLength="20"
+                            aria-describedby="basic-addon1"
+                            required >
+                        </FormControl>
+                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{itemErrMsg}</div>                        </FormGroup>
+                    <FormGroup>
+                        <FormControl
+                            name="amount"
+                            onChange={(e) => this.setState({ currentAmount: e.target.value })}
+                            value={this.state.currentAmount}
+                            style={{ "width": "20rem" }}
+                            className="mt-2 row"
+                            type="number"
+                            placeholder="Amount"
+                            aria-label="Amount"
+                            aria-describedby="basic-addon1"
+                            required >
+                        </FormControl>
+                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{amountErrMsg}</div>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormControl
+                            style={{ "width": "20rem" }}
+                            className="mt-2 row"
+                            onChange={(e) => { this.setState({ currentCategory: e.target.value }) }}
                             value={this.state.currentCategory}
-                            className="form-control form-control-lg"
-                            id="categorySelect"
-                            name="category"
-                            required>
+                            as="select">
                             <option>Food</option>
                             <option>Transportation</option>
                             <option>Work</option>
                             <option>Entertainment</option>
                             <option>Others</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="form-check form-check-inline">
-                            <input
-                                className="form-check-input custom-control-input"
-                                value="income"
-                                onClick={(e) => this.handleTypeChange(e)}
-                                name="type"
-                                type="radio"
-                                id="incomeRadio"
-                                required />
-                            <label className="form-check-label custom-control-label" htmlFor="incomeRadio">Income</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input
-                                className="form-check-input custom-control-input"
-                                value="expenditure"
-                                onChange={(e) => this.handleTypeChange(e)}
-                                name="type"
-                                type="radio"
-                                id="expenditureRadio"
-                                required />
-                            <label className="form-check-label custom-control-label" htmlFor="expenditureRadio">Expenditure</label>
-                        </div>
-                    </div>
-
-                    <button type="submit" className="btn btn-primary btn-lg">Submit</button>
-                </form>
+                        </FormControl>
+                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{categoryErrMsg}</div>
+                    </FormGroup>
+                    <FormGroup>
+                        <Form.Check
+                            onChange={() => {
+                                this.setState({ 
+                                    incomeChecked: !this.state.incomeChecked, 
+                                    outcomeChecked: !this.state.outcomeChecked});
+                            }}
+                            checked={this.state.incomeChecked}
+                            type="radio"
+                            id="income"
+                            label="income">
+                        </Form.Check>
+                        <Form.Check
+                            onChange={() => {
+                                this.setState({ 
+                                    incomeChecked: !this.state.incomeChecked, 
+                                    outcomeChecked: !this.state.outcomeChecked});
+                            }}
+                            checked={this.state.outcomeChecked}
+                            type="radio"
+                            id="outcome"
+                            label="outcome">
+                        </Form.Check>
+                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{typeErrMsg}</div>
+                    </FormGroup>
+                    <Button>Add Record</Button>
+                </Form>
             </div>
         );
     }
