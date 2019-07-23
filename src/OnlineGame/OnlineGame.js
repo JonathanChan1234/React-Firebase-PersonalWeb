@@ -1,8 +1,10 @@
 import React from 'react';
+import { Card } from 'react-bootstrap';
 import Firebase from 'firebase/firebase';
+
 import App from '../firebase/index';
 import OnlineGameBoard from './OnlineGameBoard';
-import { Card } from 'react-bootstrap';
+import Star from '../static/icons-star-24.png';
 
 const app = new App();
 const checkWinner = (currentState) => {
@@ -30,8 +32,8 @@ const checkWinner = (currentState) => {
 const resetGameState = (gameId) => {
     app.firestore.collection("TTTGames").doc(gameId)
         .update({
-            game_state: []
-        }).then((result) => {
+            game_state: Array(9).fill("")
+        }).then(() => {
             alert("game reset");
         }).catch((err) => {
             console.log(err)
@@ -77,6 +79,7 @@ class OnlineGame extends React.Component {
     updateGameState(game) {
         this.setState({
             updated_at: game.updated_at,
+            opponent: game.opponent,
             next_player: game.next_player,
             owner: game.owner,
             currentState: game.game_state
@@ -135,6 +138,11 @@ class OnlineGame extends React.Component {
             status = `Next Player is  ${(this.state.next_player) ? 'X' : 'O'}`;
         }
 
+        var remark = "";
+        if (app.auth.currentUser.uid !== this.state.next_player) {
+            remark = "Not Your Turn yet !!";
+        }
+
         return (
             <div id='container' className="d-flex flex-row justify-content-between">
                 <div>
@@ -146,13 +154,19 @@ class OnlineGame extends React.Component {
                             onClick={i => this.handleClick(i)} />
                     </div>
                     <div id="winnerText">{status}</div>
+                    <div className="mt-2" style={{ "color": "red" }}>{remark}</div>
                     <button className="btn-primary" onClick={() => resetGameState(this.gameId)}>Reset Game State</button>
                 </div>
 
                 <Card>
-                    <Card.Header>Your Opponent</Card.Header>
+                    <Card.Header>Matchup</Card.Header>
                     <Card.Text>
-                    {(this.state.opponent) ?  this.state.opponent: "No Opponent right now"}</Card.Text>
+                          <img src={Star} alt="game-master"/> 
+                    </Card.Text>
+                    <Card.Text>V.S.</Card.Text>
+                    <Card.Text>
+                        {(this.state.opponent) ? this.state.opponent : "No Opponent right now"}
+                    </Card.Text>
                 </Card>
             </div>
         );

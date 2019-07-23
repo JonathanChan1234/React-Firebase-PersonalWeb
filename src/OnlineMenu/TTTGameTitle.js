@@ -32,7 +32,7 @@ class TTTGameTitle extends React.Component {
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text style={{"fontSize": "12px"}}>{this.props.game.description}</Card.Text>
+                    <Card.Text style={{ "fontSize": "12px" }}>{this.props.game.description}</Card.Text>
                 </Card.Body>
             </Card>
         );

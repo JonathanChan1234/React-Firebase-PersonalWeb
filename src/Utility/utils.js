@@ -40,3 +40,7 @@ exports.insertionSort = function (arr) {
     }
     return arr
 }
+
+exports.handleAccountError = (error) => {
+    console.log(`Error Code: ${error.code}, Message: ${error.message}`);
+}

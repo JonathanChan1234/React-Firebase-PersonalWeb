@@ -1,8 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { Button, ListGroup } from 'react-bootstrap';
 
 import App from '../firebase/index';
+import { deleteGameRoom, enterGameRoom } from '../api/api';
+import Session from '../Session/session';
 import TTTGameTitle from './TTTGameTitle';
 import TTTNewGameModal from './TTTNewGameModal';
 import EnterTTTGameModal from './EnterTTTGameModal';
@@ -24,6 +25,7 @@ const retrieveGameList = (snapshot) => {
     });
     return games;
 }
+
 class OnlineTTTMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -52,15 +54,16 @@ class OnlineTTTMenu extends React.Component {
         app.firestore.collection("TTTGames").add({
             game_state: Array(9).fill(""),
             owner: app.auth.currentUser.uid,
+            opponent: "",
             name: game.name,
             description: game.description,
-            next_player: game.next_player,
+            next_player: app.auth.currentUser.uid,
             password: game.password,
             created_at: game.created_at,
             updated_at: game.updated_at
         }).then(ref => {
             this.setState({ show: false });
-            localStorage.setItem("currentGame", ref.id);
+            Session.storeCurrentGameSession(ref.id);
             this.props.history.push(`/online/${ref.id}`);
         }).catch(err => {
             alert("add new game " + err);
@@ -72,12 +75,22 @@ class OnlineTTTMenu extends React.Component {
      * Enter game room after clicking the game card
      */
     enterGameRoom(game) {
-        // Dismiss the modal
-        this.setState({ showPasswordModal: false });
-        // Store the current game id into local storage
-        localStorage.setItem("currentGame", game.id);
-        // redirect to the game room
-        this.props.history.push(`/online/${game.id}`)
+        enterGameRoom({
+            userId: app.auth.currentUser.uid,
+            gameId: game.id
+        }).then(result => {
+            console.log(result)
+            this.setState({ showPasswordModal: false });
+            if (result.data.success === 1) {
+                Session.storeCurrentGameSession(game.id);
+                this.props.history.push(`/online/${game.id}`);
+            } else {
+                alert(result.data.message);
+            }
+        }).catch(error => {
+            this.setState({ showPasswordModal: false });
+            alert(error);
+        });
     }
 
     /**
@@ -113,15 +126,13 @@ class OnlineTTTMenu extends React.Component {
      * Delete all game entries (for testing only)
      */
     deleteAllGameEntry() {
-        axios.post("http://localhost:5001/arduino-wifi-f0e68/us-central1/app/games/deleteAllGame")
-            .then((response) => {
-                console.log(response)
-                if (response.data.success === 1) {
-                    alert("All entry deleted");
-                } else {
-                    alert("Something is wrong");
-                }
-            }).catch(err => console.log(err));
+        deleteGameRoom().then(result => {
+            if (result.data.success === 1) {
+                alert("Delete all the game room");
+            } else {
+                alert(result.data.message);
+            }
+        })
     }
 
     renderGameMenuList() {

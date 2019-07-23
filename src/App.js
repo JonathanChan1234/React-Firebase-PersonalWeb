@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import Firebase from 'firebase/firebase';
 import FirebaseApp from './firebase/index';
 
 import TTTGame from './TTT/TTTGame';
@@ -12,23 +11,9 @@ import OnlineTTTGame from './OnlineGame/OnlineGame';
 import OnlineTTTMenu from './OnlineMenu/OnlineTTTMenu';
 import SettingPage from './Setting/index';
 import SignupPage from './Login/SignupPage';
+import { handleAccountError } from "./Utility/utils";
 
 const app = new FirebaseApp();
-const provider = new Firebase.auth.GoogleAuthProvider();
-
-const handleAccountError = (error) => {
-    console.log(`Error Code: ${error.code}, Message: ${error.message}`);
-}
-
-function NoMatch({ location }) {
-    return (
-        <div>
-            <h3>
-                No match for <code>{location.pathname}</code>
-            </h3>
-        </div>
-    );
-}
 
 class App extends React.Component {
     constructor(props) {
@@ -66,36 +51,6 @@ class App extends React.Component {
 
     componentWillUnmount() {
         this.unregisterAuthObserver();
-    }
-
-    // Sign In/Up with Your Google Account
-    signInWithGoogle() {
-        app.auth.signInWithPopup(provider).then(function (result) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-            // The signed-in user info.
-            var user = result.user;
-            console.log({ token, user })
-        }).catch(function (error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used
-            alert(errorMessage);
-        });
-    }
-
-    signInwithOwnEmail(email, password) {
-        app.auth.signInWithEmailAndPassword(email, password).catch(error => {
-            handleAccountError(error);
-        });
-    }
-
-    signUpWithOwnEmail(email, password) {
-        app.auth.createUserWithEmailAndPassword(email, password)
-            .catch((error) => {
-                handleAccountError(error);
-            });
     }
 
     signout() {
@@ -149,26 +104,33 @@ class App extends React.Component {
             );
         }
         return (
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <a className="navbar-brand" href="/">
-                        <img src="/logo.png" width="30" height="30" alt="" />Jonathan's Website
+            <Router>
+                <div>
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                        <a className="navbar-brand" href="/">
+                            <img src="/logo.png" width="30" height="30" alt="" />Jonathan's Website
                     </a>
-                </nav>
-                <hr></hr>
-                <Router>
-                    <Route path='/' exact
-                        render={() =>
-                            <LoginPage
-                                signInWithGoogle={this.signInWithGoogle}
-                                signInWithOwnEmail={this.signInwithOwnEmail}
-                                signUpWithOwnEmail={this.signUpWithOwnEmail} />
-                        } />
-                    <Route path='/signup' exact render={() => <SignupPage signUp={this.signUpWithOwnEmail} />} />
-                </Router>
-            </div>
+                    </nav>
+                    <hr></hr>
+                    <Switch>
+                        <Route path='/' exact component={LoginPage} />
+                        <Route path='/signup' render={() => <SignupPage />} />
+                        <Route component={NoMatch} />
+                    </Switch>
+                </div>
+            </Router>
         );
     }
+}
+
+function NoMatch({ location }) {
+    return (
+        <div>
+            <h3>
+                No match for <code>{location.pathname}</code>
+            </h3>
+        </div>
+    );
 }
 
 export default App;
