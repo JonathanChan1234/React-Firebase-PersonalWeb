@@ -9,6 +9,7 @@ class RecordForm extends React.Component {
         super(props);
         this.state = {
             errMsg: Array(4).fill(""),
+            submitMessage: "",
             currentItem: "",
             currentAmount: 0,
             currentCategory: "food",
@@ -23,6 +24,7 @@ class RecordForm extends React.Component {
         let form = e.currentTarget;
         let errMsg = Array(4).fill("");
         if (!form.checkValidity()) {
+            // Check error in every input element in the form
             for (let i = 0; i < form.elements.length; ++i) {
                 let formElement = form.elements[i];
                 // Check whether the input element is valid/ need to be validated/ is not button
@@ -31,22 +33,30 @@ class RecordForm extends React.Component {
                     errMsg[i] = formElement.validationMessage;
                 }
             }
-            console.log(errMsg);
         } else {
             app.firestore.collection("records").add({
-                uid: this.app.auth.currentUser.uid,
+                uid: app.auth.currentUser.uid,
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
                 category: this.state.currentCategory,
                 type: this.state.currentType,
                 date: Firebase.firestore.Timestamp.fromDate(new Date())
             }).then(ref => {
-                alert(`Add item ref no ${ref.id}`)
+                console.log(`ref ${ref.id} added`)
+                this.setState({
+                    submitMessage: "Record Added",
+                    currentItem: "",
+                    currentAmount: 0,
+                    currentCategory: "food",
+                    currentType: "",
+                    incomeChecked: false,
+                    outcomeChecked: true
+                });
             }).catch(err => {
-                alert(err)
+                this.setState({ submitMessage: err.message });
             });
         }
-        this.setState({errMsg: errMsg});
+        this.setState({ errMsg: errMsg });
     }
 
     render() {
@@ -57,7 +67,7 @@ class RecordForm extends React.Component {
                 style={{ "fontSize": "1rem" }}
                 className="d-flex flex-column align-item-center w-50"
                 validated={this.state.validated}
-                onSubmit={(e) => { this.props.handleFormSubmit(e) }}>
+                onSubmit={(e) => { this.handleFormSubmit(e) }}>
                 <FormGroup>
                     <Form.Label>Item</Form.Label>
                     <FormControl
@@ -134,6 +144,7 @@ class RecordForm extends React.Component {
                     <div className='text-danger' style={{ "fontSize": "1rem" }}>{typeErrMsg}</div>
                 </FormGroup>
                 <Button type="submit">Add Record</Button>
+                <div className='text-danger' style={{ "fontSize": "1rem" }}>{this.state.submitMessage}</div>
             </Form>
         );
     }

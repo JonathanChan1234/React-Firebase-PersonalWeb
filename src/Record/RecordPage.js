@@ -5,7 +5,7 @@ import RecordModal from './RecordModal';
 import RecordEntry from './RecordEntry';
 import RecordFilter from './RecordFilter';
 import RecordDialog from './RecordDialog';
-import { Button } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 
 const app = new App();
 class RecordPage extends React.Component {
@@ -92,7 +92,6 @@ class RecordPage extends React.Component {
 
     deleteItem() {
         if (this.state.deleteItemId !== "") {
-            console.log("delete item haha");
             app.firestore.collection("records").doc(this.state.deleteItemId).delete()
                 .then(function () {
                     console.log("Delete Successfully")
@@ -128,13 +127,7 @@ class RecordPage extends React.Component {
         });
     }
 
-    handleRecordSubmit(e) {
-        e.preventDefault();
-        console.log("form submit in record page")
-    }
-
     render() {
-        console.log(this.state)
         return (
             <div>
                 <RecordDialog
@@ -146,7 +139,6 @@ class RecordPage extends React.Component {
                     onClick={() => { this.setState({ showRecordModal: true }) }}
                     className="mt-1">Click to add a record</Button>
                 <RecordModal
-                    handleRecordSubmit={this.handleRecordSubmit}
                     show={this.state.showRecordModal}
                     onHide={() => this.setState({ showRecordModal: false })} />
                 <RecordFilter
@@ -155,19 +147,20 @@ class RecordPage extends React.Component {
                     dateFilter={this.state.dateFilter}
                     onFilterChange={this.handleFilterChange.bind(this)}
                     onDateFilterChange={this.handleDateFilterChange.bind(this)} />
-                <table className="table table-striped w-75" size="sm">
+                <Table className="table table-striped w-75" size="sm" responsive>
                     <thead className="thead-dark">
                         <tr>
                             <th scope="col">Date</th>
                             <th scope="col">Description</th>
                             <th scope="col">Type</th>
                             <th scope="col">Amount</th>
+                            <th scope="col">Files</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.renderTable()}
                     </tbody>
-                </table>
+                </Table>
             </div>
         )
     }

@@ -12,7 +12,7 @@ class Firebase {
         }
         this.firestore = firebase.firestore();
         this.auth = firebase.auth();
-        this.store = firebase.storage();
+        this.storage = firebase.storage();
         return instance;
     }
 }

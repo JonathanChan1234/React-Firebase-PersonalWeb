@@ -16,7 +16,7 @@ class RecordModal extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <RecordForm  handleFormSubmit={this.props.handleRecordSubmit}/>
+                    <RecordForm/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={this.props.onHide}>
