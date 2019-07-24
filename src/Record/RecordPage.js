@@ -22,7 +22,6 @@ class RecordPage extends React.Component {
 
     componentDidMount() {
         this.updateOrder();
-        console.log(app.auth.currentUser.uid);
     }
 
     componentWillUnmount() {
@@ -39,7 +38,6 @@ class RecordPage extends React.Component {
                     .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('date', 'desc')
                     .onSnapshot((snapshot) => {
-                        console.log("sort by date 1")
                         this.updateRecord(snapshot);
                     });
                 break;
@@ -48,7 +46,6 @@ class RecordPage extends React.Component {
                     .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('amount', 'desc')
                     .onSnapshot((snapshot) => {
-                        console.log("sort by amount")
                         this.updateRecord(snapshot);
                     });
                 break;
@@ -57,7 +54,6 @@ class RecordPage extends React.Component {
                     .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('category', 'desc')
                     .onSnapshot((snapshot) => {
-                        console.log("sort by category")
                         this.updateRecord(snapshot);
                     });
                 break;
@@ -66,7 +62,6 @@ class RecordPage extends React.Component {
                     .where("uid", "==", app.auth.currentUser.uid)
                     .orderBy('date', 'desc')
                     .onSnapshot((snapshot) => {
-                        console.log("sort default")
                         this.updateRecord(snapshot);
                     });
                 break;
@@ -95,12 +90,6 @@ class RecordPage extends React.Component {
         }
     }
 
-    handleRecordDelete(e) {
-        this.setState({
-            deleteItemId: e.target.value
-        });
-    }
-
     deleteItem() {
         if (this.state.deleteItemId !== "") {
             console.log("delete item haha");
@@ -114,19 +103,14 @@ class RecordPage extends React.Component {
         }
     }
 
-    resetDeleteItem() {
-        this.setState({
-            deleteItemId: ""
-        });
-    }
-
     renderTable() {
         var table = [];
         this.state.recordList.forEach((record) => {
-            table.push(<RecordEntry
-                key={record.id}
-                record={record}
-                handleRecordDelete={this.handleRecordDelete.bind(this)} />)
+            table.push(
+                <RecordEntry
+                    key={record.id}
+                    record={record}
+                    handleRecordDelete={(e) => {this.setState({ deleteItemId: e.target.value});}} />)
         });
         return table;
     }
@@ -144,18 +128,25 @@ class RecordPage extends React.Component {
         });
     }
 
+    handleRecordSubmit(e) {
+        e.preventDefault();
+        console.log("form submit in record page")
+    }
+
     render() {
+        console.log(this.state)
         return (
             <div>
                 <RecordDialog
                     dialog="delete"
                     deleteItem={this.deleteItem.bind(this)}
-                    resetDeleteItem={this.resetDeleteItem.bind(this)} />
-                <h1>Record List</h1>
+                    resetDeleteItem={() => {this.setState({ deleteItemId: ""})}} />
+                <h5>Records</h5>
                 <Button
                     onClick={() => { this.setState({ showRecordModal: true }) }}
                     className="mt-1">Click to add a record</Button>
                 <RecordModal
+                    handleRecordSubmit={this.handleRecordSubmit}
                     show={this.state.showRecordModal}
                     onHide={() => this.setState({ showRecordModal: false })} />
                 <RecordFilter
@@ -164,7 +155,7 @@ class RecordPage extends React.Component {
                     dateFilter={this.state.dateFilter}
                     onFilterChange={this.handleFilterChange.bind(this)}
                     onDateFilterChange={this.handleDateFilterChange.bind(this)} />
-                <table className="table table-striped">
+                <table className="table table-striped w-75" size="sm">
                     <thead className="thead-dark">
                         <tr>
                             <th scope="col">Date</th>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Firebase from 'firebase/firebase'
 import App from '../firebase/index';
-import { Form, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, Button, FormLabel } from 'react-bootstrap';
 
 const app = new App();
 class RecordForm extends React.Component {
@@ -13,16 +13,26 @@ class RecordForm extends React.Component {
             currentAmount: 0,
             currentCategory: "food",
             currentType: "",
-            incomeChecked: true,
-            outcomeChecked: false
+            incomeChecked: false,
+            outcomeChecked: true
         };
     }
 
     handleFormSubmit(e) {
         e.preventDefault();
-        if (this.state.currentAmount !== 0 &&
-            this.state.currentItem !== "" &&
-            this.state.currentType !== "") {
+        let form = e.currentTarget;
+        let errMsg = Array(4).fill("");
+        if (!form.checkValidity()) {
+            for (let i = 0; i < form.elements.length; ++i) {
+                let formElement = form.elements[i];
+                // Check whether the input element is valid/ need to be validated/ is not button
+                if (!formElement.validity.valid && formElement.tagName !== 'button' &&
+                    formElement.willValidate) {
+                    errMsg[i] = formElement.validationMessage;
+                }
+            }
+            console.log(errMsg);
+        } else {
             app.firestore.collection("records").add({
                 uid: this.app.auth.currentUser.uid,
                 amount: parseInt(this.state.currentAmount),
@@ -35,93 +45,96 @@ class RecordForm extends React.Component {
             }).catch(err => {
                 alert(err)
             });
-        } else {
-            alert("Please fill in all the field");
         }
+        this.setState({errMsg: errMsg});
     }
 
     render() {
         const [itemErrMsg, amountErrMsg, categoryErrMsg, typeErrMsg] = this.state.errMsg;
         return (
-            <div>
-                <Form
-                    noValidate
-                    className="d-flex flex-column align-item-center text-center"
-                    validated={this.state.validated}
-                    onSubmit={(e) => { this.handleFormSubmit(e) }}>
-                    <FormGroup>
-                        <FormControl
-                            name="item"
-                            onChange={(e) => this.setState({ currentItem: e.target.value })}
-                            value={this.state.currentItem}
-                            style={{ "width": "20rem" }}
-                            className="mt-2 row"
-                            type="text"
-                            placeholder="Item"
-                            aria-label="Item"
-                            maxLength="20"
-                            aria-describedby="basic-addon1"
-                            required >
-                        </FormControl>
-                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{itemErrMsg}</div>                        </FormGroup>
-                    <FormGroup>
-                        <FormControl
-                            name="amount"
-                            onChange={(e) => this.setState({ currentAmount: e.target.value })}
-                            value={this.state.currentAmount}
-                            style={{ "width": "20rem" }}
-                            className="mt-2 row"
-                            type="number"
-                            placeholder="Amount"
-                            aria-label="Amount"
-                            aria-describedby="basic-addon1"
-                            required >
-                        </FormControl>
-                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{amountErrMsg}</div>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControl
-                            style={{ "width": "20rem" }}
-                            className="mt-2 row"
-                            onChange={(e) => { this.setState({ currentCategory: e.target.value }) }}
-                            value={this.state.currentCategory}
-                            as="select">
-                            <option>Food</option>
-                            <option>Transportation</option>
-                            <option>Work</option>
-                            <option>Entertainment</option>
-                            <option>Others</option>
-                        </FormControl>
-                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{categoryErrMsg}</div>
-                    </FormGroup>
-                    <FormGroup>
-                        <Form.Check
-                            onChange={() => {
-                                this.setState({ 
-                                    incomeChecked: !this.state.incomeChecked, 
-                                    outcomeChecked: !this.state.outcomeChecked});
-                            }}
-                            checked={this.state.incomeChecked}
-                            type="radio"
-                            id="income"
-                            label="income">
-                        </Form.Check>
-                        <Form.Check
-                            onChange={() => {
-                                this.setState({ 
-                                    incomeChecked: !this.state.incomeChecked, 
-                                    outcomeChecked: !this.state.outcomeChecked});
-                            }}
-                            checked={this.state.outcomeChecked}
-                            type="radio"
-                            id="outcome"
-                            label="outcome">
-                        </Form.Check>
-                        <div className='text-danger' style={{ "fontSize": "1rem" }}>{typeErrMsg}</div>
-                    </FormGroup>
-                    <Button>Add Record</Button>
-                </Form>
-            </div>
+            <Form
+                noValidate
+                style={{ "fontSize": "1rem" }}
+                className="d-flex flex-column align-item-center w-50"
+                validated={this.state.validated}
+                onSubmit={(e) => { this.props.handleFormSubmit(e) }}>
+                <FormGroup>
+                    <Form.Label>Item</Form.Label>
+                    <FormControl
+                        name="item"
+                        onChange={(e) => this.setState({ currentItem: e.target.value })}
+                        value={this.state.currentItem}
+                        className="mt-1"
+                        type="text"
+                        placeholder="Item"
+                        aria-label="Item"
+                        maxLength="20"
+                        aria-describedby="basic-addon1"
+                        required >
+                    </FormControl>
+                    <div className='text-danger' style={{ "fontSize": "1rem" }}>{itemErrMsg}</div>
+                </FormGroup>
+                <FormGroup>
+                    <Form.Label>Amount</Form.Label>
+                    <FormControl
+                        name="amount"
+                        onChange={(e) => this.setState({ currentAmount: e.target.value })}
+                        value={this.state.currentAmount}
+                        min="1"
+                        className="mt-1"
+                        type="number"
+                        placeholder="Amount"
+                        aria-label="Amount"
+                        aria-describedby="basic-addon1"
+                        required >
+                    </FormControl>
+                    <div className='text-danger' style={{ "fontSize": "1rem" }}>{amountErrMsg}</div>
+                </FormGroup>
+                <FormGroup>
+                    <Form.Label>Category</Form.Label>
+                    <FormControl
+                        className="mt-1"
+                        onChange={(e) => { this.setState({ currentCategory: e.target.value }) }}
+                        value={this.state.currentCategory}
+                        as="select">
+                        <option>Food</option>
+                        <option>Transportation</option>
+                        <option>Work</option>
+                        <option>Entertainment</option>
+                        <option>Others</option>
+                    </FormControl>
+                    <div className='text-danger' style={{ "fontSize": "1rem" }}>{categoryErrMsg}</div>
+                </FormGroup>
+                <FormGroup>
+                    <FormLabel>Type</FormLabel>
+                    <Form.Check
+                        onChange={() => {
+                            this.setState({
+                                incomeChecked: !this.state.incomeChecked,
+                                outcomeChecked: !this.state.outcomeChecked
+                            });
+                        }}
+                        checked={this.state.incomeChecked}
+                        type="radio"
+                        id="income"
+                        label="income">
+                    </Form.Check>
+                    <Form.Check
+                        onChange={() => {
+                            this.setState({
+                                incomeChecked: !this.state.incomeChecked,
+                                outcomeChecked: !this.state.outcomeChecked
+                            });
+                        }}
+                        checked={this.state.outcomeChecked}
+                        type="radio"
+                        id="outcome"
+                        label="outcome">
+                    </Form.Check>
+                    <div className='text-danger' style={{ "fontSize": "1rem" }}>{typeErrMsg}</div>
+                </FormGroup>
+                <Button type="submit">Add Record</Button>
+            </Form>
         );
     }
 }

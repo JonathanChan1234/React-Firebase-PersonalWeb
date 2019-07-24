@@ -13,11 +13,11 @@ class RecordFilter extends React.Component {
 
     render() {
         return (
-            <form>
+            <form style={{"fontSize": "0.5rem"}} className="mt-2">
                 <div className="form-row">
                     <div className="form-group col-md-4">
                         <select
-                            className="form-control form-control-lg"
+                            className="form-control"
                             value={this.props.sortOrder}
                             onChange={(e) => this.props.onFilterChange(e)}>
                             <option>Sort By Date</option>
@@ -29,7 +29,7 @@ class RecordFilter extends React.Component {
                         <select
                             value={this.props.dateFilter}
                             onChange={(e) => this.props.onDateFilterChange(e)}
-                            className="form-control form-control-lg">
+                            className="form-control">
                             {this.getOption()}
                         </select>
                     </div>

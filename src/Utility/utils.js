@@ -13,6 +13,12 @@ exports.findAllMonth = function (recordList) {
     return [];
 }
 
+exports.timestampToDateString = function (timestamp) {
+    let t = new Date(1970, 0, 1);
+    t.setSeconds(timestamp.seconds);
+    return `${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`;
+}
+
 exports.isArrayEmpty = function(arr) {
     for(let i = 0; i < arr.length; ++i) {
         if(arr[i] !== "") return 0;
