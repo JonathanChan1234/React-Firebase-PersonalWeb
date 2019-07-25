@@ -7,15 +7,49 @@ import App from "../firebase/index";
 
 const app = new App();
 class RecordEntry extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { url: "" };
+    }
     uploadRecordImage(e) {
-        console.log()
-        let storageRef = app.storage.ref(); // Root Ref
-        let fileRef = storageRef.child(`image/${this.props.record.id}.jpg`);
-        // upload image to firebase storage
-        fileRef.put(e.target.files[0]).then((snapshot) => {
-            console.log("upload successfully");
-            console.log(snapshot);
+        let fileInput = e.currentTarget;
+        console.log(fileInput);
+        let file = e.target.files[0];
+        console.log(file);
+        fileInput.style.visibility = "hidden";
+        
+        // let storageRef = app.storage.ref(); // Root Ref
+        // let fileRef = storageRef.child(`image/${this.props.record.id}.jpg`);
+        // // upload image to firebase storage
+        // fileRef.put(e.target.files[0]).then((snapshot) => {
+        //     console.log("upload successfully");
+        //     console.log(snapshot);
+        // })
+    }
+
+    downloadRecordImage(id) {
+        let storageRef = app.storage.ref();
+        storageRef.child(`image/${id}.jpg`).getDownloadURL().then(url => {
+            this.setState({ url: url })
+        }).catch(err => {
+            // handle error
         })
+    }
+
+    renderRecordFile() {
+        if (this.props.record.file) {
+            this.downloadRecordImage(this.props.record.id);
+            return <img src={this.state.url} alt={""} />;
+        } else {
+            return (
+                <input
+                    onChange={(e) => { this.uploadRecordImage(e) }}
+                    type="file"
+                    id="image_uploads"
+                    name="image_uploads"
+                    accept=".jpg, .jpeg, .png"
+                    multiple />);
+        }
     }
 
     render() {
@@ -46,15 +80,7 @@ class RecordEntry extends React.Component {
                         Remove</Button>
                 </td>
                 <td>
-                    {/* <label for="image_uploads">Choose images to upload (PNG, JPG)</label> */}
-                    <input
-                        onChange={(e) => {this.uploadRecordImage(e)}}
-                        type="file"
-                        id="image_uploads"
-                        name="image_uploads"
-                        accept=".jpg, .jpeg, .png"
-                        multiple>
-                    </input>
+                    {this.renderRecordFile()}
                 </td>
             </tr>
         );
