@@ -69,25 +69,28 @@ class RecordPage extends React.Component {
     }
 
     updateRecord(snapshot) {
+        let recordList = [];
         if (snapshot.empty) {
             console.log("No record found");
         } else {
-            let recordList = [];
             snapshot.forEach((record) => {
                 let obj = new Record(
                     record.id,
+                    record.data().uid,
                     record.data().amount,
                     record.data().category,
                     record.data().date,
                     record.data().description,
-                    record.data().type
+                    record.data().type,
+                    (record.data().file) ? record.data().file : "",
+                    (record.data().path) ? record.data().path : ""
                 );
                 recordList.push(obj);
             });
-            this.setState({
-                recordList: recordList
-            });
         }
+        this.setState({
+            recordList: recordList
+        });
     }
 
     deleteItem() {
@@ -111,6 +114,7 @@ class RecordPage extends React.Component {
                     record={record}
                     handleRecordDelete={(e) => {this.setState({ deleteItemId: e.target.value});}} />)
         });
+        console.log(table)
         return table;
     }
 
