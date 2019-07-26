@@ -76,7 +76,10 @@ class RecordEntry extends React.Component {
         if (this.props.record.file) {
             return (
                 <div className="d-flex justify-content-between">
-                    <img src={this.props.record.file} alt={""} />
+                    <Button
+                        onClick={() => this.props.previewFile(this.props.record)}>
+                        Preview
+                    </Button>
                     <img
                         name={this.props.record.id}
                         src={cancelIcon}

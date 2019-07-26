@@ -34,12 +34,13 @@ class RecordForm extends React.Component {
                 }
             }
         } else {
+            let type = (this.state.incomeChecked) ? "income" : "expenditure";
             app.firestore.collection("records").add({
                 uid: app.auth.currentUser.uid,
                 amount: parseInt(this.state.currentAmount),
                 description: this.state.currentItem,
                 category: this.state.currentCategory,
-                type: this.state.currentType,
+                type: type,
                 date: Firebase.firestore.Timestamp.fromDate(new Date())
             }).then(ref => {
                 console.log(`ref ${ref.id} added`)

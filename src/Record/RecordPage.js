@@ -1,11 +1,12 @@
 import React from 'react';
+import { Button, Table } from 'react-bootstrap';
 import App from '../firebase/index';
 import Record from '../Object/Record';
 import RecordModal from './RecordModal';
 import RecordEntry from './RecordEntry';
 import RecordFilter from './RecordFilter';
 import RecordDialog from './RecordDialog';
-import { Button, Table } from 'react-bootstrap';
+import RecordFilePreviewer from './RecordFilePreviewer';
 
 const app = new App();
 class RecordPage extends React.Component {
@@ -13,7 +14,9 @@ class RecordPage extends React.Component {
         super(props);
         this.state = {
             showRecordModal: false,
+            showPreviewModal: false,
             recordList: [],
+            currentRecord: null,
             deleteItemId: "",
             sortOrder: "",
             dateFilter: ""
@@ -112,9 +115,9 @@ class RecordPage extends React.Component {
                 <RecordEntry
                     key={record.id}
                     record={record}
-                    handleRecordDelete={(e) => {this.setState({ deleteItemId: e.target.value});}} />)
+                    handleRecordDelete={(e) => { this.setState({ deleteItemId: e.target.value }); }}
+                    previewFile={this.previewFile.bind(this)} />)
         });
-        console.log(table)
         return table;
     }
 
@@ -131,13 +134,20 @@ class RecordPage extends React.Component {
         });
     }
 
+    previewFile(record) {
+        this.setState({
+            currentRecord: record,
+            showPreviewModal: true
+        });
+    }
+
     render() {
         return (
             <div>
                 <RecordDialog
                     dialog="delete"
                     deleteItem={this.deleteItem.bind(this)}
-                    resetDeleteItem={() => {this.setState({ deleteItemId: ""})}} />
+                    resetDeleteItem={() => { this.setState({ deleteItemId: "" }) }} />
                 <h5>Records</h5>
                 <Button
                     onClick={() => { this.setState({ showRecordModal: true }) }}
@@ -145,6 +155,10 @@ class RecordPage extends React.Component {
                 <RecordModal
                     show={this.state.showRecordModal}
                     onHide={() => this.setState({ showRecordModal: false })} />
+                <RecordFilePreviewer
+                    show={this.state.showPreviewModal}
+                    onHide={() => this.setState({ showPreviewModal: false })}
+                    record={this.state.currentRecord} />
                 <RecordFilter
                     recordList={this.state.recordList}
                     sortOrder={this.state.sortOrder}
