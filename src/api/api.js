@@ -14,6 +14,16 @@ const gameRequest = axios.create({
     baseURL: `${domain}/games`
 });
 
+// Delete record item
+export async function deleteItem(record) {
+    try {
+        await app.firestore.collection("records").doc(record.id).delete();
+        await app.storage.child("")
+    } catch(err){
+        
+    }
+}
+
 // Sign up with a new user
 export async function signUpNewUser(email, password, displayName, photoURL) {
     try {
