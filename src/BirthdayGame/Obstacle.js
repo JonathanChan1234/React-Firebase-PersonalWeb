@@ -16,8 +16,21 @@ class Obstacle {
     }
 
     updatePosition() {
+        this.x += -1;
         this.context.fillStyle = this.color;
         this.context.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    stopMoving() {
+        this.context.fillStyle = this.color;
+        this.context.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    resetPosition() {
+        this.x = 100;
+        this.y = 260;
+        this.context.fillStyle = this.color;
+        this.context.fillRect(100, 260, this.width, this.height);
     }
 }
 

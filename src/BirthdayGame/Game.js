@@ -17,48 +17,79 @@ class BirthdayGame extends React.Component {
         };
     }
 
+    handleKeyDown(event) {
+        // event.preventDefault();
+        const key = event.key;
+        console.log(key)
+        switch (key) {
+            case "ArrowUp":
+                this.gameBlock.moveUp();
+                break;
+            case "ArrowDown":
+                this.gameBlock.moveDown();
+                break;
+            case "ArrowLeft":
+                this.gameBlock.moveLeft();
+                break;
+            case "ArrowRight":
+                this.gameBlock.moveRight();
+                break;
+            case " ":
+                this.gameBlock.accelerateUp(-0.2);
+                break;
+            default:
+                break;
+        }
+        console.log("--------------------------")
+    }
+
+    handleKeyUp(event) {
+        switch (event.key) {
+            case " ":
+                this.gameBlock.accelerateUp(0.1);
+                break;
+            default:
+                this.gameBlock.stop();
+                break;
+        }
+    }
+
     componentDidMount() {
+        this.frameNo = 0;
         this.gameContext = this.canvasRef.current.getContext('2d');
         this.gameBlock = new GameBlock(30, 30, "red", 50, 120, this.gameContext);
-        this.obstacle = new Obstacle(150, 10, "green", 100, 160, this.gameContext);
+        this.obstacles = [];
+        // this.obstacle = new Obstacle(150, 10, "green", 100, 260, this.gameContext);
         this.gameUpdateInterval = setInterval(() => {
             this.updateGameState();
         }, 20);
-        document.addEventListener('keydown', (event) => {
-            const key = event.key;
-            switch (key) {
-                case "ArrowUp":
-                    this.gameBlock.moveUp();
-                    break;
-                case "ArrowDown":
-                    this.gameBlock.moveDown();
-                    break;
-                case "ArrowLeft":
-                    this.gameBlock.moveLeft();
-                    break;
-                case "ArrowRight":
-                    this.gameBlock.moveRight();
-                    break;
-                default:
-                    break;
-            }
-        });
-        document.addEventListener('keyup', (event) => {
-            this.gameBlock.stop();
-        });
+        document.addEventListener('keydown', this.handleKeyDown);
+        document.addEventListener('keyup', this.handleKeyUp);
     }
 
     componentWillUnmount() {
         clearInterval(this.gameUpdateInterval);
-        document.removeEventListener("keydown");
-        document.removeEventListener('keyup');
+        document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener('keyup', this.handleKeyUp);
     }
 
     updateGameState() {
         this.clearGameArea();
-        this.obstacle.updatePosition();
-        if(this.gameBlock.checkCrash(this.obstacle)) this.gameBlock.stop();
-        this.gameBlock.updateBlockPosition();
+        if (this.checkCrash(this.obstacles)) {
+            this.gameBlock.stop();
+            this.obstacle.stopMoving();
+        } else {
+            this.obstacles.forEach(obstacle => {
+                obstacle.updatePosition();
+            });
+            this.gameBlock.updateBlockPosition();
+        }
+        this.frameNo++;
+        if(this.frameNo === 1 && this.checkInterval()) {
+            let x = 480;
+            let y = 360 - 200; 
+            this.obstacles.push(new Obstacle(150, 10, "green", x, y, this.gameContext))
+        }
         this.setState({
             x: this.gameBlock.x,
             y: this.gameBlock.y,
@@ -67,9 +98,22 @@ class BirthdayGame extends React.Component {
         });
     }
 
+    checkCrash() {
+        this.obstacles.forEach(obstacle => {
+            if(this.gameBlock.checkCrash(obstacle)) return true;
+        });
+        return false;
+    }
+    
+    checkInterval() {
+        if((this.frameNo / 150) % 1 === 0) return true;
+        return false
+    }
+
     resetGameArea() {
         this.clearGameArea();
         this.gameBlock.resetPosition();
+        this.obstacle.resetPosition();
     }
 
     clearGameArea() {
@@ -104,7 +148,7 @@ class BirthdayGame extends React.Component {
                         height="360px"
                         width="480px" />
                     <div className="d-flex flex-column m-3">
-                        <Button onClick={() => { this.resetGameArea() }}>Clear Game Area</Button>
+                        <Button onClick={() => { this.resetGameArea() }}>Start New Game</Button>
                         <Button onClick={() => { this.moveUp() }}>Move Up</Button>
                         <br></br>
                         <Button onClick={() => { this.moveLeft() }}>Move Left</Button>
@@ -115,10 +159,10 @@ class BirthdayGame extends React.Component {
                     <div className="m-3">
                         <Card>
                             <Card.Header>Status</Card.Header>
-                            <Card.Text>x: {this.state.x}</Card.Text>
-                            <Card.Text>y: {this.state.y}</Card.Text>
-                            <Card.Text>x_speed: {this.state.x_speed}</Card.Text>
-                            <Card.Text>y_speed: {this.state.y_speed}</Card.Text>
+                            <Card.Text>x: {this.state.x.toFixed(3)}</Card.Text>
+                            <Card.Text>y: {this.state.y.toFixed(3)}</Card.Text>
+                            <Card.Text>x_speed: {this.state.x_speed.toFixed(3)}</Card.Text>
+                            <Card.Text>y_speed: {this.state.y_speed.toFixed(3)}</Card.Text>
                         </Card>
                     </div>
                 </div>
