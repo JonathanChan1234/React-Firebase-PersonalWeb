@@ -50,7 +50,12 @@ body {
   background: green;
 }
 
+.game-area {
+  border: 1px solid #d3d3d3;
+  background-color: #f1f1f1;
+}
 
+/* Loader dialog */
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */

@@ -7,17 +7,19 @@ import RecordEntry from './RecordEntry';
 import RecordFilter from './RecordFilter';
 import RecordDialog from './RecordDialog';
 import RecordFilePreviewer from './RecordFilePreviewer';
+import LoadingModal from '../GlobalComponent/LoadingModal';
 
 const app = new App();
 class RecordPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            showLoadingModal: false,
             showRecordModal: false,
             showPreviewModal: false,
             recordList: [],
             currentRecord: null,
-            deleteItemId: "",
+            deleteItem: null,
             sortOrder: "",
             dateFilter: ""
         };
@@ -73,9 +75,7 @@ class RecordPage extends React.Component {
 
     updateRecord(snapshot) {
         let recordList = [];
-        if (snapshot.empty) {
-            console.log("No record found");
-        } else {
+        if (!snapshot.empty) {
             snapshot.forEach((record) => {
                 let obj = new Record(
                     record.id,
@@ -91,20 +91,26 @@ class RecordPage extends React.Component {
                 recordList.push(obj);
             });
         }
-        this.setState({
-            recordList: recordList
-        });
+        this.setState({ recordList: recordList });
     }
 
-    deleteItem() {
-        if (this.state.deleteItemId !== "") {
-            app.firestore.collection("records").doc(this.state.deleteItemId).delete()
-                .then(function () {
-                    console.log("Delete Successfully")
-                })
-                .catch(function (error) {
-                    console.log("Something is wrong " + error)
-                });
+    async deleteItem() {
+        this.setState({ showLoadingModal: true });
+        let record = this.state.deleteItem;
+        if (record.id) {
+            try {
+                await app.firestore.collection("records").doc(record.id).delete();
+                console.log("delete record in database")
+                if (record.path) {   //if file exist, delete the photo in storage
+                    let storageRef = app.storage.ref().child(record.path)
+                    await storageRef.delete();
+                    console.log("delete file in storage")
+                }
+                this.setState({ showLoadingModal: false });
+            } catch (error) {
+                this.setState({ showLoadingModal: false });
+                alert(`Fail to delete the item ${error.message}`);
+            }
         }
     }
 
@@ -115,7 +121,7 @@ class RecordPage extends React.Component {
                 <RecordEntry
                     key={record.id}
                     record={record}
-                    handleRecordDelete={(e) => { this.setState({ deleteItemId: e.target.value }); }}
+                    handleRecordDelete={(record) => { this.setState({ deleteItem: record }); }}
                     previewFile={this.previewFile.bind(this)} />)
         });
         return table;
@@ -148,6 +154,7 @@ class RecordPage extends React.Component {
                     dialog="delete"
                     deleteItem={this.deleteItem.bind(this)}
                     resetDeleteItem={() => { this.setState({ deleteItemId: "" }) }} />
+                <LoadingModal show={this.state.showLoadingModal} />
                 <h5>Records</h5>
                 <Button
                     onClick={() => { this.setState({ showRecordModal: true }) }}

@@ -11,6 +11,7 @@ import OnlineTTTGame from './OnlineGame/OnlineGame';
 import OnlineTTTMenu from './OnlineMenu/OnlineTTTMenu';
 import SettingPage from './Setting/index';
 import SignupPage from './Login/SignupPage';
+import BirthdayGame from './BirthdayGame/Game';
 import { handleAccountError } from "./Utility/utils";
 
 const app = new FirebaseApp();
@@ -77,6 +78,7 @@ class App extends React.Component {
                                 <Link to="/advanced" className="nav-text nav-link">Advanced</Link>
                                 <Link to="/record" className="nav-text nav-link">Record</Link>
                                 <Link to="/menu" className="nav-text nav-link">Online</Link>
+                                <Link to="/game" className="nav-text nav-link">Game</Link>
                             </Nav>
                             <Nav>
                                 <NavDropdown
@@ -95,7 +97,7 @@ class App extends React.Component {
                         <Route path='/advanced' component={TTTAdvancedGame} />
                         <Route path='/record' component={RecordPage} />
                         <Route path='/menu' component={OnlineTTTMenu} />
-                        <Route path='/game' component={TTTGame} />
+                        <Route path='/game' component={BirthdayGame} />
                         <Route path='/setting' component={SettingPage} />
                         <Route path='/online/:id' component={OnlineTTTGame} />
                         <Route component={NoMatch} />

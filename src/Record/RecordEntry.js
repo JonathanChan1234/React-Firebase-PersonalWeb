@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Firebase from 'firebase/firebase';
-import { Button, ProgressBar, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import cancelIcon from "../static/icons-cancel-24.png";
 // import addIcon from '../static/icons-add-24.png';
@@ -103,28 +102,27 @@ class RecordEntry extends React.Component {
     }
 
     render() {
+        const record = this.props.record;
         return (
             <tr style={{ "fontSize": "1rem" }}>
-                <th scope="row">{timestampToDateString(this.props.record.date)}</th>
-                <td>{this.props.record.description}</td>
-                <td>{this.props.record.category}</td>
+                <th scope="row">{timestampToDateString(record.date)}</th>
+                <td>{record.description}</td>
+                <td>{record.category}</td>
                 <td>
-                    <span>$ {this.props.record.amount}</span>
+                    <span>$ {record.amount}</span>
                     <img
                         src={cancelIcon}
                         alt="cancel"
                         className="ml-2"
-                        value={this.props.record.id}
                         style={{ "cursor": "pointer" }}
                         data-toggle="modal"
                         data-target="#exampleModal"
-                        onClick={(e) => { this.props.handleRecordDelete(e) }} />
+                        onClick={() => { this.props.handleRecordDelete(record) }} />
                     <Button
                         variant="warning"
                         className="ml-2"
                         size="sm"
-                        value={this.props.record.id}
-                        onClick={(e) => this.props.handleRecordDelete(e)}
+                        onClick={() => this.props.handleRecordDelete(record)}
                         data-toggle="modal"
                         data-target="#exampleModal">
                         Remove</Button>

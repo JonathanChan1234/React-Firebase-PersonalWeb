@@ -8,7 +8,6 @@ class RecordFilePreviewer extends React.Component {
         this.state = { showLoader: "block" };
     }
     onImageLoad(e) {
-        console.log("loading image")
         if (e.currentTarget.complete) {
             this.setState({ showLoader: "none" });
         }

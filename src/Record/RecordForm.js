@@ -43,7 +43,6 @@ class RecordForm extends React.Component {
                 type: type,
                 date: Firebase.firestore.Timestamp.fromDate(new Date())
             }).then(ref => {
-                console.log(`ref ${ref.id} added`)
                 this.setState({
                     submitMessage: "Record Added",
                     currentItem: "",

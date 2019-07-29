@@ -79,7 +79,6 @@ class OnlineTTTMenu extends React.Component {
             userId: app.auth.currentUser.uid,
             gameId: game.id
         }).then(result => {
-            console.log(result)
             this.setState({ showPasswordModal: false });
             if (result.data.success === 1) {
                 Session.storeCurrentGameSession(game.id);
@@ -148,7 +147,6 @@ class OnlineTTTMenu extends React.Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
                 <div className="d-flex flex-column w-25">
