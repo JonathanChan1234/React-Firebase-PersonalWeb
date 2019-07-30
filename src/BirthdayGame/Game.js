@@ -2,6 +2,13 @@ import React from 'react';
 import { Button, Card, Form, FormControl } from 'react-bootstrap';
 import GameBlock from './GameBlock';
 import Obstacle from './Obstacle';
+import BObstacle from './Letter/BObstacle';
+import HObstacle from './Letter/HObstacle';
+import DObstacle from './Letter/DObstacle';
+import KObstacle from './Letter/KObstacle';
+import EObstacle from './Letter/EObstacle';
+import LObstacle from './Letter/LObstacke';
+import YObstacle from './Letter/YObstacle';
 
 class BirthdayGame extends React.Component {
     constructor(props) {
@@ -14,7 +21,8 @@ class BirthdayGame extends React.Component {
             y: 120,
             x_speed: 0,
             y_speed: 0,
-            obstacleFrame: 150
+            obstacleFrame: 150,
+            obstacle_count: 0
         };
     }
 
@@ -56,16 +64,10 @@ class BirthdayGame extends React.Component {
 
     componentDidMount() {
         this.frameNo = 0;
-        this.obstacleFrame = 40;
+        this.obstacleFrame = 100;
         this.gameContext = this.canvasRef.current.getContext('2d');
         this.gameBlock = new GameBlock(30, 30, "red", 50, 120, this.gameContext);
-        this.obstacles = [];
-        this.count = 0;
-        this.presetObstacle = [
-            new Obstacle(150, 10, "green", 480, 0, this.gameContext),
-            new Obstacle(10, 50, "green", 480, 75, this.gameContext),
-            new Obstacle(150, 10, "green", 480, 0, this.gameContext)
-        ];
+        this.initGameObstacle();
         this.gameUpdateInterval = setInterval(() => {
             this.updateGameState();
         }, 20);
@@ -86,12 +88,12 @@ class BirthdayGame extends React.Component {
         } else {
             this.updateFrame();
         }
-
         this.setState({
             x: this.gameBlock.x,
             y: this.gameBlock.y,
             x_speed: this.gameBlock.x_speed,
-            y_speed: this.gameBlock.y_speed
+            y_speed: this.gameBlock.y_speed,
+            obstacle_count: this.obstacles.length
         });
     }
 
@@ -110,9 +112,10 @@ class BirthdayGame extends React.Component {
         this.frameNo++;
         if (this.frameNo === 1 || this.checkInterval()) {
             let x = 480;
-            let y = 0; 
-            if(this.count < this.presetObstacle.length) {
+            let y = 0;
+            if (this.count < this.presetObstacle.length) {
                 this.obstacles.push(this.presetObstacle[this.count]);
+                this.presetObstacle[this.count].updateFrame();
                 this.count++;
             } else {
                 this.obstacles.push(new Obstacle(150, 10, "green", x, y, this.gameContext));
@@ -132,13 +135,26 @@ class BirthdayGame extends React.Component {
         return false
     }
 
-    resetGameArea() {
+    initGameObstacle() {
+        this.obstacles = [];
         this.count = 0;
+        this.presetObstacle = [
+            // new Obstacle(150, 10, "green", 480, 0, this.gameContext),
+            new HObstacle("green", this.gameContext),
+            new BObstacle("green", this.gameContext),
+            new DObstacle("green", this.gameContext),
+            new KObstacle("green", this.gameContext),
+            new EObstacle("green", this.gameContext),
+            new LObstacle("green", this.gameContext),
+            new LObstacle("green", this.gameContext),
+            new YObstacle("green", this.gameContext)
+        ];
+    }
+
+    resetGameArea() {
+        this.initGameObstacle();
         this.clearGameArea();
         this.gameBlock.resetPosition();
-        // this.obstacles.forEach(obstacle => {
-        //     obstacle.resetPosition();
-        // });
     }
 
     clearGameArea() {
@@ -147,7 +163,7 @@ class BirthdayGame extends React.Component {
 
     updateObstacleFrame(e) {
         e.preventDefault();
-        this.obstacleFrame = this.state.obstacleFrame; 
+        this.obstacleFrame = this.state.obstacleFrame;
     }
 
     moveUp() {
@@ -190,7 +206,7 @@ class BirthdayGame extends React.Component {
                         <Form onSubmit={(e) => this.updateObstacleFrame(e)}>
                             <Form.Label>Frame per obstacle</Form.Label>
                             <FormControl
-                                onChange={(e) => {this.setState({obstacleFrame: e.target.value})}}
+                                onChange={(e) => { this.setState({ obstacleFrame: e.target.value }) }}
                                 name="frame"
                                 min="10"
                                 className="m-1"
@@ -198,7 +214,7 @@ class BirthdayGame extends React.Component {
                                 aria-describedby="basic-addon1"
                                 required >
                             </FormControl>
-                            <Button type ="submit">Update</Button>
+                            <Button type="submit">Update</Button>
                         </Form>
 
                         <Card>
@@ -207,6 +223,7 @@ class BirthdayGame extends React.Component {
                             <Card.Text>y: {this.state.y.toFixed(3)}</Card.Text>
                             <Card.Text>x_speed: {this.state.x_speed.toFixed(3)}</Card.Text>
                             <Card.Text>y_speed: {this.state.y_speed.toFixed(3)}</Card.Text>
+                            <Card.Text>obstacle count: {this.state.obstacle_count}</Card.Text>
                         </Card>
                     </div>
                 </div>

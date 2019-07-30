@@ -10,12 +10,7 @@ class GameBlock {
         this.gravity = 0.05;
         this.color = color;
         this.context = context;
-        this.initBlock();
-    }
-
-    initBlock() {
-        this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.render();
     }
 
     resetPosition() {
@@ -23,8 +18,7 @@ class GameBlock {
         this.y = 330;
         this.x_speed = 0;
         this.y_speed = 0;
-        this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.render();
     }
 
     updateBlockPosition() {
@@ -41,8 +35,7 @@ class GameBlock {
             this.gravity = 0;
             this.y_speed = 0;
         }
-        this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.render();
     }
 
     checkCrash(obstacle) {
@@ -77,8 +70,7 @@ class GameBlock {
     stop() {
         this.x_speed = 0;
         this.y_speed = 0;
-        this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.render();
     }
 
     moveUp() {
@@ -99,6 +91,11 @@ class GameBlock {
     moveRight() {
         // this.y_speed = 0;
         this.x_speed = 1;
+    }
+
+    render() {
+        this.context.fillStyle = this.color;
+        this.context.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
