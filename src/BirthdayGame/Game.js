@@ -64,7 +64,7 @@ class BirthdayGame extends React.Component {
 
     componentDidMount() {
         this.frameNo = 0;
-        this.obstacleFrame = 100;
+        this.obstacleFrame = 150;
         this.gameContext = this.canvasRef.current.getContext('2d');
         this.gameBlock = new GameBlock(30, 30, "red", 50, 120, this.gameContext);
         this.initGameObstacle();
@@ -118,7 +118,12 @@ class BirthdayGame extends React.Component {
                 this.presetObstacle[this.count].updateFrame();
                 this.count++;
             } else {
-                this.obstacles.push(new Obstacle(150, 10, "green", x, y, this.gameContext));
+                let gap = Math.floor((Math.random() * 50) + 100);
+                let upperHeight = Math.floor((Math.random() * 210) + 1);
+                let lowerHeight = 360 - upperHeight - gap;
+                console.log(gap)
+                this.obstacles.push(new Obstacle(upperHeight, 10, "green", 480, 0, this.gameContext));
+                this.obstacles.push(new Obstacle(lowerHeight, 10, "yellow", 480, (upperHeight + gap), this.gameContext));
             }
         }
     }
@@ -139,15 +144,14 @@ class BirthdayGame extends React.Component {
         this.obstacles = [];
         this.count = 0;
         this.presetObstacle = [
-            // new Obstacle(150, 10, "green", 480, 0, this.gameContext),
-            new HObstacle("green", this.gameContext),
-            new BObstacle("green", this.gameContext),
-            new DObstacle("green", this.gameContext),
-            new KObstacle("green", this.gameContext),
-            new EObstacle("green", this.gameContext),
-            new LObstacle("green", this.gameContext),
-            new LObstacle("green", this.gameContext),
-            new YObstacle("green", this.gameContext)
+            // new HObstacle("green", this.gameContext),
+            // new BObstacle("green", this.gameContext),
+            // new DObstacle("green", this.gameContext),
+            // new KObstacle("green", this.gameContext),
+            // new EObstacle("green", this.gameContext),
+            // new LObstacle("green", this.gameContext),
+            // new LObstacle("green", this.gameContext),
+            // new YObstacle("green", this.gameContext)
         ];
     }
 
