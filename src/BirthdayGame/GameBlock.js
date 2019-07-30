@@ -20,11 +20,11 @@ class GameBlock {
 
     resetPosition() {
         this.x = 50;
-        this.y = 120;
+        this.y = 330;
         this.x_speed = 0;
         this.y_speed = 0;
         this.context.fillStyle = this.color;
-        this.context.fillRect(50, 120, this.width, this.height);
+        this.context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     updateBlockPosition() {

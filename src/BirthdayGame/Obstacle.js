@@ -26,11 +26,18 @@ class Obstacle {
         this.context.fillRect(this.x, this.y, this.width, this.height);
     }
 
+    remove() {
+        this.x = 0;
+        this.y = 0;
+        this.context.fillStyle = this.color;
+        this.context.fillRect(this.x, this.y, 0, 0);
+    }
+
     resetPosition() {
         this.x = 100;
-        this.y = 260;
+        this.y = 0;
         this.context.fillStyle = this.color;
-        this.context.fillRect(100, 260, this.width, this.height);
+        this.context.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 

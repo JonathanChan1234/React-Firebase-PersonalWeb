@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Form, FormControl } from 'react-bootstrap';
 import GameBlock from './GameBlock';
 import Obstacle from './Obstacle';
 
@@ -13,14 +13,14 @@ class BirthdayGame extends React.Component {
             x: 50,
             y: 120,
             x_speed: 0,
-            y_speed: 0
+            y_speed: 0,
+            obstacleFrame: 150
         };
     }
 
-    handleKeyDown(event) {
+    handleKeyDown = function (event) {
         // event.preventDefault();
         const key = event.key;
-        console.log(key)
         switch (key) {
             case "ArrowUp":
                 this.gameBlock.moveUp();
@@ -43,7 +43,7 @@ class BirthdayGame extends React.Component {
         console.log("--------------------------")
     }
 
-    handleKeyUp(event) {
+    handleKeyUp = function (event) {
         switch (event.key) {
             case " ":
                 this.gameBlock.accelerateUp(0.1);
@@ -56,40 +56,37 @@ class BirthdayGame extends React.Component {
 
     componentDidMount() {
         this.frameNo = 0;
+        this.obstacleFrame = 40;
         this.gameContext = this.canvasRef.current.getContext('2d');
         this.gameBlock = new GameBlock(30, 30, "red", 50, 120, this.gameContext);
         this.obstacles = [];
-        // this.obstacle = new Obstacle(150, 10, "green", 100, 260, this.gameContext);
+        this.count = 0;
+        this.presetObstacle = [
+            new Obstacle(150, 10, "green", 480, 0, this.gameContext),
+            new Obstacle(10, 50, "green", 480, 75, this.gameContext),
+            new Obstacle(150, 10, "green", 480, 0, this.gameContext)
+        ];
         this.gameUpdateInterval = setInterval(() => {
             this.updateGameState();
         }, 20);
-        document.addEventListener('keydown', this.handleKeyDown);
-        document.addEventListener('keyup', this.handleKeyUp);
+        document.addEventListener('keydown', this.handleKeyDown.bind(this), false);
+        document.addEventListener('keyup', this.handleKeyUp.bind(this), false);
     }
 
     componentWillUnmount() {
         clearInterval(this.gameUpdateInterval);
-        document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
     updateGameState() {
         this.clearGameArea();
         if (this.checkCrash(this.obstacles)) {
-            this.gameBlock.stop();
-            this.obstacle.stopMoving();
+            this.freezeScreen();
         } else {
-            this.obstacles.forEach(obstacle => {
-                obstacle.updatePosition();
-            });
-            this.gameBlock.updateBlockPosition();
+            this.updateFrame();
         }
-        this.frameNo++;
-        if(this.frameNo === 1 && this.checkInterval()) {
-            let x = 480;
-            let y = 360 - 200; 
-            this.obstacles.push(new Obstacle(150, 10, "green", x, y, this.gameContext))
-        }
+
         this.setState({
             x: this.gameBlock.x,
             y: this.gameBlock.y,
@@ -99,25 +96,58 @@ class BirthdayGame extends React.Component {
     }
 
     checkCrash() {
-        this.obstacles.forEach(obstacle => {
-            if(this.gameBlock.checkCrash(obstacle)) return true;
-        });
+        for (let i = 0; i < this.obstacles.length; ++i) {
+            if (this.gameBlock.checkCrash(this.obstacles[i])) return true;
+        }
         return false;
     }
-    
+
+    updateFrame() {
+        this.obstacles.forEach(obstacle => {
+            obstacle.updatePosition();
+        });
+        this.gameBlock.updateBlockPosition();
+        this.frameNo++;
+        if (this.frameNo === 1 || this.checkInterval()) {
+            let x = 480;
+            let y = 0; 
+            if(this.count < this.presetObstacle.length) {
+                this.obstacles.push(this.presetObstacle[this.count]);
+                this.count++;
+            } else {
+                this.obstacles.push(new Obstacle(150, 10, "green", x, y, this.gameContext));
+            }
+        }
+    }
+
+    freezeScreen() {
+        this.gameBlock.stop();
+        this.obstacles.forEach(obstacle => {
+            obstacle.stopMoving();
+        });
+    }
+
     checkInterval() {
-        if((this.frameNo / 150) % 1 === 0) return true;
+        if ((this.frameNo / this.obstacleFrame) % 1 === 0) return true;
         return false
     }
 
     resetGameArea() {
+        this.count = 0;
         this.clearGameArea();
         this.gameBlock.resetPosition();
-        this.obstacle.resetPosition();
+        // this.obstacles.forEach(obstacle => {
+        //     obstacle.resetPosition();
+        // });
     }
 
     clearGameArea() {
         this.gameContext.clearRect(0, 0, 480, 360);
+    }
+
+    updateObstacleFrame(e) {
+        e.preventDefault();
+        this.obstacleFrame = this.state.obstacleFrame; 
     }
 
     moveUp() {
@@ -157,6 +187,20 @@ class BirthdayGame extends React.Component {
                         <Button onClick={() => { this.moveDown() }}>Move Down</Button>
                     </div>
                     <div className="m-3">
+                        <Form onSubmit={(e) => this.updateObstacleFrame(e)}>
+                            <Form.Label>Frame per obstacle</Form.Label>
+                            <FormControl
+                                onChange={(e) => {this.setState({obstacleFrame: e.target.value})}}
+                                name="frame"
+                                min="10"
+                                className="m-1"
+                                type="number"
+                                aria-describedby="basic-addon1"
+                                required >
+                            </FormControl>
+                            <Button type ="submit">Update</Button>
+                        </Form>
+
                         <Card>
                             <Card.Header>Status</Card.Header>
                             <Card.Text>x: {this.state.x.toFixed(3)}</Card.Text>
