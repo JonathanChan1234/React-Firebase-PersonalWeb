@@ -138,116 +138,121 @@ class BirthdayGame extends React.Component {
         }
     }
 
-checkInterval() {
-    if ((this.frameNo / this.obstacleFrame) % 1 === 0) return true;
-    return false
-}
-
-/**
- * freeze the screen when the player is dead
- */
-freezeScreen() {
-    this.gameBlock.stop();
-    this.obstacles.forEach(obstacle => {
-        obstacle.stopMoving();
-    });
-}
-
-initGameObstacle() {
-    this.obstacles = [];
-    this.presetObstacle = [];
-    this.count = 0;
-}
-
-resetGameArea() {
-    this.frameNo = 0;
-    this.initGameObstacle();
-    this.clearGameArea();
-    this.gameBlock.resetPosition();
-}
-
-clearGameArea() {
-    this.gameContext.clearRect(0, 0, 480, 360);
-}
-
-updateObstacleFrame(e) {
-    e.preventDefault();
-    this.obstacleFrame = this.state.obstacleFrame;
-}
-
-addCongratulationMessage() {
-    this.obstacleFrame = 150;
-    switch (message[this.count]) {
-        case 'h':
-            this.obstacles.push(new HObstacle("pink", this.gameContext));
-            break;
-        case 'b':
-            this.obstacles.push(new BObstacle("pink", this.gameContext));
-            break;
-        case 'd':
-            this.obstacles.push(new DObstacle("pink", this.gameContext));
-            break;
-        case 'k':
-            this.obstacles.push(new KObstacle("pink", this.gameContext));
-            break;
-        case 'e':
-            this.obstacles.push(new EObstacle("pink", this.gameContext));
-            break;
-        case 'l':
-            this.obstacles.push(new LObstacle("pink", this.gameContext));
-            break;
-        case 'y':
-            this.obstacles.push(new YObstacle("pink", this.gameContext));
-            break;
-        default:
-            break;
+    checkInterval() {
+        if ((this.frameNo / this.obstacleFrame) % 1 === 0) return true;
+        return false
     }
-    this.count = (this.count + 1) % message.length;
-}
 
-render() {
-    return (
-        <div>
-            <h5>Birthday Game</h5>
-            <div className="d-flex flex-row align-items-center w-100">
-                <canvas
-                    ref={this.canvasRef}
-                    id="birthday-game-area"
-                    className="game-area"
-                    height="360px"
-                    width="480px" />
-                <div className="d-flex flex-column m-3">
-                    <Button onClick={() => { this.resetGameArea() }}>Start New Game</Button>
-                </div>
-                <div className="m-3">
-                    <Form onSubmit={(e) => this.updateObstacleFrame(e)}>
-                        <Form.Label>Frame per obstacle</Form.Label>
-                        <FormControl
-                            onChange={(e) => { this.setState({ obstacleFrame: e.target.value }) }}
-                            name="frame"
-                            min="10"
-                            className="m-1"
-                            type="number"
-                            aria-describedby="basic-addon1"
-                            required >
-                        </FormControl>
-                        <Button type="submit">Update</Button>
-                    </Form>
+    /**
+     * freeze the screen when the player is dead
+     */
+    freezeScreen() {
+        this.gameBlock.stop();
+        this.obstacles.forEach(obstacle => {
+            obstacle.stopMoving();
+        });
+        this.gameContext.fillStyle = "rgba(128, 138, 156, 0.7)";
+        this.gameContext.fillRect(0, 0, 480, 360);
+        this.gameContext.font = '48px consolas';
+        this.gameContext.fillStyle = "black";
+        this.gameContext.fillText('Game Over', 180, 160);
+    }
 
-                    <Card>
-                        <Card.Header>Status</Card.Header>
-                        <Card.Text>x: {this.state.x.toFixed(3)}</Card.Text>
-                        <Card.Text>y: {this.state.y.toFixed(3)}</Card.Text>
-                        <Card.Text>x_speed: {this.state.x_speed.toFixed(3)}</Card.Text>
-                        <Card.Text>y_speed: {this.state.y_speed.toFixed(3)}</Card.Text>
-                        <Card.Text>obstacle count: {this.state.obstacle_count}</Card.Text>
-                        <Card.Text>score: {this.state.score}</Card.Text>
-                    </Card>
+    initGameObstacle() {
+        this.obstacles = [];
+        this.presetObstacle = [];
+        this.count = 0;
+    }
+
+    resetGameArea() {
+        this.frameNo = 0;
+        this.initGameObstacle();
+        this.clearGameArea();
+        this.gameBlock.resetPosition();
+    }
+
+    clearGameArea() {
+        this.gameContext.clearRect(0, 0, 480, 360);
+    }
+
+    updateObstacleFrame(e) {
+        e.preventDefault();
+        this.obstacleFrame = this.state.obstacleFrame;
+    }
+
+    addCongratulationMessage() {
+        this.obstacleFrame = 150;
+        switch (message[this.count]) {
+            case 'h':
+                this.obstacles.push(new HObstacle("pink", this.gameContext));
+                break;
+            case 'b':
+                this.obstacles.push(new BObstacle("pink", this.gameContext));
+                break;
+            case 'd':
+                this.obstacles.push(new DObstacle("pink", this.gameContext));
+                break;
+            case 'k':
+                this.obstacles.push(new KObstacle("pink", this.gameContext));
+                break;
+            case 'e':
+                this.obstacles.push(new EObstacle("pink", this.gameContext));
+                break;
+            case 'l':
+                this.obstacles.push(new LObstacle("pink", this.gameContext));
+                break;
+            case 'y':
+                this.obstacles.push(new YObstacle("pink", this.gameContext));
+                break;
+            default:
+                break;
+        }
+        this.count = (this.count + 1) % message.length;
+    }
+
+    render() {
+        return (
+            <div>
+                <h5>Birthday Game</h5>
+                <div className="d-flex flex-row align-items-center w-100">
+                    <canvas
+                        ref={this.canvasRef}
+                        id="birthday-game-area"
+                        className="game-area"
+                        height="360px"
+                        width="480px" />
+                    <div className="d-flex flex-column m-3">
+                        <Button onClick={() => { this.resetGameArea() }}>Start New Game</Button>
+                    </div>
+                    <div className="m-3">
+                        <Form onSubmit={(e) => this.updateObstacleFrame(e)}>
+                            <Form.Label>Frame per obstacle</Form.Label>
+                            <FormControl
+                                onChange={(e) => { this.setState({ obstacleFrame: e.target.value }) }}
+                                name="frame"
+                                min="10"
+                                className="m-1"
+                                type="number"
+                                aria-describedby="basic-addon1"
+                                required >
+                            </FormControl>
+                            <Button type="submit">Update</Button>
+                        </Form>
+
+                        <Card>
+                            <Card.Header>Status</Card.Header>
+                            <Card.Text>x: {this.state.x.toFixed(3)}</Card.Text>
+                            <Card.Text>y: {this.state.y.toFixed(3)}</Card.Text>
+                            <Card.Text>x_speed: {this.state.x_speed.toFixed(3)}</Card.Text>
+                            <Card.Text>y_speed: {this.state.y_speed.toFixed(3)}</Card.Text>
+                            <Card.Text>obstacle count: {this.state.obstacle_count}</Card.Text>
+                            <Card.Text>score: {this.state.score}</Card.Text>
+                        </Card>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 }
 
 export default BirthdayGame;
